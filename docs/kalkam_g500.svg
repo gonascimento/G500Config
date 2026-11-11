@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480"><rect width="640" height="480" rx="28" fill="#0b0c10" /><text x="28" y="44" fill="#ffffff" font-family="Rajdhani, Inter, Arial" font-size="30" font-weight="700">Kalkam G500</text>
+        <rect x="28" y="54" width="56" height="4" rx="2" fill="#ff2a4b" />
+        <g transform="translate(0 60)">
+        <ellipse cx="320" cy="400" rx="300" ry="16" fill="#000" opacity=".35" />
+        <!-- base do volante -->
+        <path d="M 110 392 L 150 300 L 330 300 L 370 392 Z" fill="#161a23" stroke="#3a4357" stroke-width="2" />
+        <rect x="196" y="262" width="88" height="48" rx="10" fill="#1d222d" stroke="#3a4357" stroke-width="2" />
+        <g transform="translate(240 170) scale(0.3415730337078652) translate(-615 -510)">
+            <!-- aro -->
+            <circle cx="615" cy="510" r="402" fill="none" stroke="#12151c" stroke-width="82" />
+            <circle cx="615" cy="510" r="402" fill="none" stroke="#232a39" stroke-width="70" stroke-dasharray="26 9" />
+            <circle cx="615" cy="510" r="361" fill="none" stroke="#2f384b" stroke-width="3" />
+            <rect x="603" y="68" width="24" height="88" rx="4" fill="#ff2a4b" />
+            <!-- borboletas (atrás) -->
+            <path d="M 338 472 C 328 420 342 352 372 338 C 394 330 412 344 406 380 L 398 472 Z" fill="#2a3245" stroke="#ff2a4b" stroke-width="3" />
+            <path d="M 892 472 C 902 420 888 352 858 338 C 836 330 818 344 824 380 L 832 472 Z" fill="#2a3245" stroke="#ff2a4b" stroke-width="3" />
+            <!-- raio inferior em V (vazado) -->
+            <path d="M 438 610 L 545 868 L 685 868 L 792 610 Z" fill="#8b97a8" stroke="#cbd5e1" stroke-width="3" />
+            <path d="M 492 636 L 573 832 L 657 832 L 738 636 Z" fill="#0d0f14" stroke="#475569" stroke-width="3" />
+            <!-- asas prateadas -->
+            <path d="M 262 548 C 262 505 280 494 304 489 L 506 438 L 498 612 L 302 606 C 278 604 262 592 262 548 Z" fill="#94a3b8" stroke="#cbd5e1" stroke-width="3" />
+            <path d="M 968 548 C 968 505 950 494 926 489 L 724 438 L 732 612 L 928 606 C 952 604 968 592 968 548 Z" fill="#94a3b8" stroke="#cbd5e1" stroke-width="3" />
+            <!-- apoios dos botões de baixo -->
+            <ellipse cx="412" cy="664" rx="62" ry="44" transform="rotate(38 412 664)" fill="#7c8899" stroke="#cbd5e1" stroke-width="3" />
+            <ellipse cx="818" cy="664" rx="62" ry="44" transform="rotate(-38 818 664)" fill="#7c8899" stroke="#cbd5e1" stroke-width="3" />
+            <!-- centro com visor -->
+            <circle cx="615" cy="510" r="128" fill="#12151c" stroke="#64748b" stroke-width="5" />
+            <circle cx="615" cy="510" r="114" fill="none" stroke="#ff2a4b" stroke-width="3" />
+            <rect x="548" y="428" width="134" height="132" rx="44" fill="#0b0c10" stroke="#334155" stroke-width="4" />
+            <path d="M 597 476 L 633 512 M 633 476 L 597 512" stroke="#ff2a4b" stroke-width="9" stroke-linecap="round" />
+            <circle cx="615" cy="586" r="6" fill="#ff2a4b" />
+            <text x="548" y="611" text-anchor="middle" fill="#64748b" font-size="13" font-family="Inter" font-weight="700">PROG</text>
+            <!-- direcional -->
+            <circle cx="378" cy="548" r="46" fill="#1e2430" stroke="#475569" stroke-width="3" />
+            <path d="M 354 541 H 371 V 524 H 385 V 541 H 402 V 555 H 385 V 572 H 371 V 555 H 354 Z" fill="#ff2a4b" />
+            <!-- A B X Y -->
+            <circle cx="848" cy="513" r="16" fill="#eab308" stroke="#fff" stroke-width="3" /><circle cx="819" cy="540" r="16" fill="#3b82f6" stroke="#fff" stroke-width="3" />
+            <circle cx="877" cy="540" r="16" fill="#ef4444" stroke="#fff" stroke-width="3" /><circle cx="848" cy="567" r="16" fill="#22c55e" stroke="#fff" stroke-width="3" />
+            <!-- L1 L2 L3 / R1 R2 R3 -->
+            <circle cx="388" cy="640" r="17" fill="#1e2430" stroke="#64748b" stroke-width="3" /><circle cx="420" cy="662" r="17" fill="#1e2430" stroke="#64748b" stroke-width="3" /><circle cx="434" cy="694" r="17" fill="#1e2430" stroke="#64748b" stroke-width="3" />
+            <circle cx="842" cy="640" r="17" fill="#1e2430" stroke="#64748b" stroke-width="3" /><circle cx="810" cy="662" r="17" fill="#1e2430" stroke="#64748b" stroke-width="3" /><circle cx="796" cy="694" r="17" fill="#1e2430" stroke="#64748b" stroke-width="3" />
+            <!-- fileira de baixo do centro: SHARE, MODE, OPTIONS, compartilhar -->
+            <circle cx="582" cy="625" r="15" fill="#1e2430" stroke="#64748b" stroke-width="3" /><circle cx="615" cy="632" r="15" fill="#1e2430" stroke="#64748b" stroke-width="3" /><circle cx="650" cy="624" r="15" fill="#1e2430" stroke="#64748b" stroke-width="3" /><circle cx="685" cy="604" r="15" fill="#1e2430" stroke="#64748b" stroke-width="3" /></g>
+        <g transform="translate(386 186) scale(0.92)">
+        <path d="M 8 70 L 22 46 L 238 46 L 252 70 L 252 168 L 8 168 Z" fill="#1d222d" stroke="#3a4357" stroke-width="2" />
+        <rect x="16" y="56" width="228" height="10" rx="3" fill="#2a3245" />
+        
+        <rect x="30" y="74" width="52" height="86" rx="7" fill="#c7cfda" stroke="#e5e9f0" stroke-width="2" />
+        <circle cx="44.56" cy="92.92" r="4.5" fill="#1e2430" /><circle cx="44.56" cy="141.07999999999998" r="4.5" fill="#1e2430" /><circle cx="67.44" cy="92.92" r="4.5" fill="#1e2430" /><circle cx="67.44" cy="141.07999999999998" r="4.5" fill="#1e2430" />
+        <rect x="104" y="74" width="52" height="86" rx="7" fill="#c7cfda" stroke="#e5e9f0" stroke-width="2" />
+        <circle cx="118.56" cy="92.92" r="4.5" fill="#1e2430" /><circle cx="118.56" cy="141.07999999999998" r="4.5" fill="#1e2430" /><circle cx="141.44" cy="92.92" r="4.5" fill="#1e2430" /><circle cx="141.44" cy="141.07999999999998" r="4.5" fill="#1e2430" />
+        <rect x="186" y="60" width="40" height="100" rx="7" fill="#c7cfda" stroke="#e5e9f0" stroke-width="2" />
+        <circle cx="197.2" cy="82" r="4.5" fill="#1e2430" /><circle cx="197.2" cy="138" r="4.5" fill="#1e2430" /><circle cx="214.8" cy="82" r="4.5" fill="#1e2430" /><circle cx="214.8" cy="138" r="4.5" fill="#1e2430" />
+        <path d="M 0 168 L 260 168 L 248 226 L 12 226 Z" fill="#151922" stroke="#3a4357" stroke-width="2" />
+        <rect x="24" y="180" width="16" height="36" rx="3" fill="#0d1016" /><rect x="48" y="180" width="16" height="36" rx="3" fill="#0d1016" /><rect x="72" y="180" width="16" height="36" rx="3" fill="#0d1016" /><rect x="96" y="180" width="16" height="36" rx="3" fill="#0d1016" /><rect x="120" y="180" width="16" height="36" rx="3" fill="#0d1016" /><rect x="144" y="180" width="16" height="36" rx="3" fill="#0d1016" /><rect x="168" y="180" width="16" height="36" rx="3" fill="#0d1016" /><rect x="192" y="180" width="16" height="36" rx="3" fill="#0d1016" /><rect x="216" y="180" width="16" height="36" rx="3" fill="#0d1016" />
+        <rect x="104" y="174" width="52" height="12" rx="3" fill="#ff2a4b" opacity=".85" /></g>
+        <g transform="translate(432 0) scale(0.86)">
+        <path d="M 10 150 C 10 90 40 70 96 70 L 150 70 C 182 70 196 96 196 130 L 196 168 C 196 182 186 190 172 190 L 28 190 C 16 190 10 180 10 166 Z"
+              fill="#1d222d" stroke="#3a4357" stroke-width="2" />
+        <ellipse cx="96" cy="112" rx="58" ry="30" fill="#12151c" stroke="#475569" stroke-width="2" />
+        <path d="M 62 102 H 130 M 62 122 H 130 M 70 98 V 126 M 96 98 V 126 M 122 98 V 126" stroke="#3a4357" stroke-width="5" stroke-linecap="round" />
+        <rect x="91" y="40" width="10" height="72" rx="4" fill="#9aa4b5" />
+        <circle cx="96" cy="34" r="27" fill="#2a3245" stroke="#cbd5e1" stroke-width="2.5" />
+        <circle cx="88" cy="26" r="8" fill="#ffffff" opacity=".18" />
+        <rect x="150" y="102" width="30" height="20" rx="5" fill="#12151c" stroke="#ff2a4b" stroke-width="2" />
+        <text x="165" y="117" text-anchor="middle" fill="#ff2a4b" font-family="Inter, Arial" font-size="12" font-weight="800">P</text>
+        <rect x="150" y="132" width="30" height="20" rx="5" fill="#12151c" stroke="#64748b" stroke-width="2" />
+        <text x="165" y="146" text-anchor="middle" fill="#cbd5e1" font-family="Inter, Arial" font-size="8.5" font-weight="800">LO/HI</text></g>
+        </g>
+    </svg>

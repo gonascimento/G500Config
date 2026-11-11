@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G500 Config</title>
+    <script>window.__errors=[];addEventListener("error",e=>__errors.push(e.message+" @"+(e.filename||"").split("/").pop()+":"+e.lineno));addEventListener("unhandledrejection",e=>__errors.push("promise: "+(e.reason&&e.reason.message||e.reason)));</script>
+    <script src="vendor/tailwind.js"></script>
+    <link rel="stylesheet" href="vendor/fonts/fonts.css">
+    <link rel="stylesheet" href="vendor/fa/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        hub: {
+                            bg: '#0b0c10', panel: '#12151c', card: '#181c26', border: '#242b3b',
+                            hover: '#2a3245', text: '#e1e7f0', kalkam: '#00f0ff', pcyes: '#ff2a4b'
+                        }
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Rajdhani', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="app.css">
+</head>
+<body class="bg-hub-bg text-hub-text font-sans h-screen flex flex-col antialiased overflow-hidden">
+
+<!-- ===================== CABEÇALHO (seletor de dispositivo estilo G HUB) ===================== -->
+<header class="bg-hub-panel border-b border-hub-border px-6 py-3 shrink-0">
+    <div class="flex items-center justify-between gap-x-6 gap-y-3 flex-wrap">
+        <div class="flex items-center gap-3">
+            <div id="logo" class="w-10 h-10 shadow-lg" title="G500 Config"></div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <h1 class="font-display font-extrabold text-xl tracking-wider text-white uppercase">G500 Config</h1>
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-soft text-brand border border-brand-soft" id="device-badge">FFB · LITE STAR</span>
+                </div>
+                <p class="text-xs text-gray-400 hidden 2xl:block">Configurador de volantes Kalkam G500 e PCyes W270</p>
+            </div>
+        </div>
+
+        <!-- conexões -->
+        <div class="flex items-center gap-2">
+            <div class="pill" title="Conexão pelo cabo USB">
+                <span class="dot" id="usb-dot"></span>
+                <i class="fa-brands fa-usb text-gray-400"></i>
+                <span id="usb-text" class="text-gray-300">Procurando…</span>
+            </div>
+            <div class="pill" title="Conexão Bluetooth (configurações gravadas no volante)">
+                <span class="dot" id="bt-dot"></span>
+                <i class="fa-brands fa-bluetooth-b text-gray-400"></i>
+                <span id="bt-text" class="text-gray-300">Bluetooth desconectado</span>
+                <button class="mini-btn" id="bt-connect" onclick="App.bleConnect()">Conectar</button>
+            </div>
+        </div>
+
+        <!-- seletor de volante -->
+        <div class="flex items-center gap-2 bg-hub-bg p-1.5 rounded-xl border border-hub-border">
+            <button class="device-tab" data-device="kalkam" onclick="App.setDevice('kalkam')">
+                <span class="dev-art" data-art="kalkam"><img src="img/kalkam_g500.png" alt=""></span><span><b>Kalkam G500</b><small class="det"></small></span>
+            </button>
+            <button class="device-tab" data-device="pcyes" onclick="App.setDevice('pcyes')">
+                <span class="dev-art" data-art="pcyes"><img src="img/pcyes_w270.png" alt=""></span><span><b>PCyes W270</b><small class="det"></small></span>
+            </button>
+            <button onclick="App.toggleArt()" id="btn-art" class="bg-hub-card hover:bg-hub-hover border border-hub-border text-gray-300 hover:text-white px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5" title="Mostrar os volantes como foto ou como desenho">
+                <i class="fa-solid fa-image text-brand"></i><span>Foto</span>
+            </button>
+            <button onclick="App.pickColor()" class="bg-hub-card hover:bg-hub-hover border border-hub-border text-gray-300 hover:text-white px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5" title="Cor base da interface">
+                <i class="fa-solid fa-palette text-brand"></i><span>Cor</span>
+            </button>
+            <button onclick="App.setDevice('auto')" id="btn-auto" class="bg-hub-card hover:bg-hub-hover border border-hub-border text-gray-300 hover:text-white px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5" title="Escolher o volante pelo que estiver conectado">
+                <i class="fa-solid fa-arrows-rotate text-brand"></i><span>Auto</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<main class="flex-1 overflow-y-auto">
+<div class="max-w-[2200px] mx-auto p-5 flex flex-col gap-5">
+
+    <!-- ===================== FAIXA DE PERFIL ===================== -->
+    <div class="bg-hub-panel border border-hub-border rounded-2xl p-4 flex items-center justify-between gap-4 shadow-xl flex-wrap">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-folder-open text-brand text-lg"></i>
+            <div>
+                <span class="text-[10px] uppercase tracking-wider text-gray-400 font-bold block">Perfil ativo</span>
+                <div class="flex items-center gap-2">
+                    <select id="profile-select" class="field font-bold text-sm min-w-[230px]" onchange="App.activate(this.value)"></select>
+                    <span id="auto-tag" class="hidden text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">ATIVADO PELO JOGO</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap">
+            <button class="btn" onclick="App.profileNew()"><i class="fa-solid fa-plus"></i>Novo</button>
+            <button class="btn" onclick="App.profileDuplicate()"><i class="fa-regular fa-copy"></i>Duplicar</button>
+            <button class="btn" onclick="App.profileRename()"><i class="fa-solid fa-pen"></i>Renomear</button>
+            <button class="btn btn-danger" onclick="App.profileDelete()"><i class="fa-solid fa-trash"></i>Excluir</button>
+            <span class="w-px h-7 bg-hub-border mx-1"></span>
+            <button class="btn" onclick="App.importProfiles()"><i class="fa-solid fa-file-import"></i>Importar</button>
+            <button class="btn" onclick="App.exportProfiles('current')"><i class="fa-solid fa-file-export"></i>Exportar</button>
+        </div>
+        <label class="flex items-center gap-3 cursor-pointer" title="Enquanto esta janela estiver em primeiro plano, manda forças de referência (como um jogo) para você sentir os ajustes gravados no volante.">
+            <span class="text-right">
+                <span class="block text-xs font-bold text-white">Sentir os ajustes</span>
+                <span class="block text-[10px] text-gray-400" id="preview-status">desligado</span>
+            </span>
+            <input type="checkbox" class="switch" data-g="preview">
+        </label>
+    </div>
+
+    <!-- ===================== ABAS ===================== -->
+    <nav class="flex items-center gap-1 border-b border-hub-border overflow-x-auto" id="tabs">
+        <button class="tab-btn" data-tab="steering"><i class="fa-solid fa-circle-notch"></i>Volante e Força</button>
+        <button class="tab-btn" data-tab="pedals"><i class="fa-solid fa-gauge-high"></i>Pedais e Câmbio</button>
+        <button class="tab-btn" data-tab="buttons"><i class="fa-solid fa-gamepad"></i>Botões</button>
+        <button class="tab-btn" data-tab="ffb"><i class="fa-solid fa-bolt"></i>Force feedback</button>
+        <button class="tab-btn" data-tab="compat"><i class="fa-solid fa-right-left"></i>Compatibilidade</button>
+        <button class="tab-btn" data-tab="overlay"><i class="fa-solid fa-layer-group"></i>Overlay nos jogos</button>
+        <button class="tab-btn" data-tab="profiles"><i class="fa-solid fa-list"></i>Perfis</button>
+    </nav>
+
+    <!-- ===================== ABA 1: VOLANTE E FORÇA ===================== -->
+    <section class="tab-content grid grid-cols-12 gap-5" data-tab="steering">
+        <div class="col-span-7 bg-hub-panel border border-hub-border rounded-2xl p-6 flex flex-col items-center relative overflow-hidden shadow-2xl bg-carbon">
+            <div class="w-full flex justify-between items-center z-10">
+                <div>
+                    <h2 class="card-title"><i class="fa-solid fa-circle-dot text-brand"></i>Visualização do aro</h2>
+                    <p class="text-xs text-gray-400">Gire o volante: o desenho acompanha em tempo real</p>
+                </div>
+                <div class="bg-hub-bg/90 px-3 py-1.5 rounded-xl border border-hub-border flex items-center gap-2">
+                    <span class="text-xs text-gray-400">Ângulo atual:</span>
+                    <span id="angle-now" class="font-display font-extrabold text-xl text-brand">0°</span>
+                </div>
+            </div>
+            <div class="relative my-6 flex items-center justify-center w-full max-w-[380px] aspect-square">
+                <div class="absolute inset-y-0 w-px border-l border-dashed border-brand-soft pointer-events-none"></div>
+                <div id="wheel-wrap" class="w-full h-full origin-center drop-shadow-[0_15px_30px_rgba(0,0,0,0.9)]">
+                    <svg id="wheel-svg" viewBox="0 0 400 400" class="w-full h-full"></svg>
+                </div>
+            </div>
+            <div class="w-full bg-hub-card/90 p-4 rounded-xl border border-hub-border z-10">
+                <div class="flex justify-between text-xs font-semibold mb-2">
+                    <span class="text-gray-300"><i class="fa-solid fa-arrows-left-right text-brand mr-1.5"></i>Saída da direção</span>
+                    <span id="steer-out" class="font-mono text-white">0.00</span>
+                </div>
+                <div class="relative h-3 bg-hub-bg rounded-full border border-hub-border overflow-hidden">
+                    <div class="absolute inset-y-0 left-1/2 w-px bg-gray-500"></div>
+                    <div id="steer-bar" class="absolute inset-y-0 bg-brand rounded-full"></div>
+                </div>
+                <div class="flex justify-between text-[10px] text-gray-500 font-mono font-bold mt-1">
+                    <span>ESQUERDA</span><span>CENTRO</span><span>DIREITA</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-span-5 flex flex-col gap-5">
+            <div class="card">
+                <div class="flex justify-between items-center">
+                    <h3 class="card-h"><i class="fa-solid fa-compass text-brand"></i>Trava de ângulo</h3>
+                    <span class="tag" id="angle-badge">900°</span>
+                </div>
+                <div class="grid grid-cols-4 gap-2">
+                    <button class="preset" data-angle="270" onclick="App.setAngle(270)">270°<small>Kart</small></button>
+                    <button class="preset" data-angle="540" onclick="App.setAngle(540)">540°<small>GT / Rally</small></button>
+                    <button class="preset" data-angle="720" onclick="App.setAngle(720)">720°<small>Turismo</small></button>
+                    <button class="preset" data-angle="900" onclick="App.setAngle(900)">900°<small>Rua / Truck</small></button>
+                </div>
+                <div class="slider-row"><span>Ajuste fino</span><b data-label="hw.angle"></b>
+                    <input type="range" min="90" max="900" step="10" data-bind="hw.angle"></div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-h"><i class="fa-solid fa-bolt text-brand"></i>Force feedback do volante
+                    <i class="fa-regular fa-circle-question text-gray-500 ml-auto cursor-help" title="Estes ajustes ficam gravados no volante e modificam as forças que o jogo manda. Para sentir aqui, ligue 'Sentir os ajustes'."></i></h3>
+                <div class="slider-row"><span>Força geral (FFB)</span><b data-label="hw.ffb" data-suffix="%"></b>
+                    <input type="range" min="0" max="100" data-bind="hw.ffb"></div>
+                <div class="slider-row"><span>Mola (retorno ao centro)</span><b data-label="hw.spring" data-suffix="%"></b>
+                    <input type="range" min="0" max="100" data-bind="hw.spring"></div>
+                <div class="slider-row"><span>Amortecimento (peso)</span><b data-label="hw.damper" data-suffix="%"></b>
+                    <input type="range" min="0" max="100" data-bind="hw.damper"></div>
+                <div class="slider-row"><span>Atrito (piso e batidas)</span><b data-label="hw.friction" data-suffix="%"></b>
+                    <input type="range" min="0" max="100" data-bind="hw.friction"></div>
+                <div class="slider-row"><span>Inércia</span><b data-label="hw.inertia" data-suffix="%"></b>
+                    <input type="range" min="0" max="100" data-bind="hw.inertia"></div>
+                <div class="flex flex-col gap-2 pt-1">
+                    <label class="check"><input type="checkbox" class="switch sm" data-bind="hw.reverse"><span>Inverter o lado da força</span></label>
+                    <label class="check"><input type="checkbox" class="switch sm" data-bind="hw.apply"><span>Enviar ao volante sempre que este perfil for ativado</span></label>
+                </div>
+                <div class="flex items-center gap-3 pt-2 border-t border-hub-border">
+                    <button class="btn-primary" onclick="App.sendHw()"><i class="fa-solid fa-paper-plane"></i>Enviar ao volante</button>
+                    <button class="btn" onclick="App.bleRead()" title="Ler os valores gravados no volante"><i class="fa-solid fa-download"></i>Ler</button>
+                    <div class="badge" data-badge="bt"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-h"><i class="fa-solid fa-chart-line text-brand"></i>Resposta da direção <span class="text-[10px] text-gray-500 font-normal ml-1">(no programa)</span></h3>
+                <div class="slider-row"><span>Zona morta central</span><b data-label="wheel.deadzone" data-scale="100" data-suffix="%"></b>
+                    <input type="range" min="0" max="30" data-bind="wheel.deadzone" data-scale="100"></div>
+                <div class="slider-row"><span>Curva (1 = linear)</span><b data-label="wheel.gamma" data-fixed="2"></b>
+                    <input type="range" min="0.4" max="3" step="0.05" data-bind="wheel.gamma"></div>
+                <canvas id="steer-curve" width="420" height="110" class="w-full h-24 bg-hub-bg rounded-lg border border-hub-border"></canvas>
+                <p class="hint">Vale no modo compatibilidade (controle virtual). O volante não guarda zona morta nem curva da direção.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== ABA 2: PEDAIS E CÂMBIO ===================== -->
+    <section class="tab-content hidden grid grid-cols-12 gap-5" data-tab="pedals">
+        <div class="col-span-7 flex flex-col gap-5">
+            <div class="card">
+                <div class="flex justify-between items-center">
+                    <h2 class="card-title"><i class="fa-solid fa-chart-simple text-brand"></i>Pedais em tempo real</h2>
+                    <span class="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded font-mono font-bold">AO VIVO</span>
+                </div>
+                <div class="flex flex-col gap-4" id="pedal-bars"></div>
+                <p class="hint" id="pedals-on-wheel-note"></p>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4" id="pedal-cards"></div>
+
+            <div class="card">
+                <div class="flex items-center gap-3 flex-wrap">
+                    <button class="btn-primary" onclick="App.sendPedals(false)"><i class="fa-solid fa-paper-plane"></i>Enviar curvas ao volante</button>
+                    <button class="btn" onclick="App.sendPedals(true)"><i class="fa-solid fa-rotate-left"></i>Pedais lineares (padrão)</button>
+                    <div class="badge" data-badge="adj"></div>
+                </div>
+                <p class="hint">Grava no próprio volante a zona morta, a saturação e a curva dos três pedais: passam a valer em qualquer jogo.</p>
+            </div>
+        </div>
+
+        <div class="col-span-5 flex flex-col gap-5">
+            <div class="card">
+                <div class="flex justify-between items-center">
+                    <h3 class="card-h"><i class="fa-solid fa-table-cells text-brand"></i>Câmbio H (6 marchas + ré)</h3>
+                    <span class="tag font-mono" id="gear-now">MARCHA: N</span>
+                </div>
+                <p class="text-xs text-gray-400">Já vem configurado (marchas 1–6 = botões 16–21, ré = 22, freio de mão (P) = 15, LO/HI = 23). Para corrigir, clique na marcha e engate-a no câmbio.</p>
+                <div class="bg-hub-bg rounded-2xl border border-hub-border p-5 flex flex-col items-center gap-3">
+                    <div class="grid grid-cols-4 gap-3 w-full max-w-[280px]" id="gear-grid"></div>
+                    <div class="grid grid-cols-2 gap-3 w-full max-w-[280px]">
+                        <button class="gear-btn extra" data-extra="park"><i class="fa-solid fa-square-parking mr-1"></i>FREIO DE MÃO<small></small></button>
+                        <button class="gear-btn extra" data-extra="range"><i class="fa-solid fa-arrow-up-wide-short mr-1"></i>LO / HI<small></small></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-h"><i class="fa-solid fa-sliders text-brand"></i>Eixos e calibração</h3>
+                <div class="flex flex-col gap-2" id="axis-rows"></div>
+                <div class="flex items-center gap-3 pt-2 border-t border-hub-border">
+                    <button class="btn" onclick="App.calibrate()"><i class="fa-solid fa-crosshairs"></i>Calibrar (10 s)</button>
+                    <span class="hint !mt-0" id="axes-raw"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== ABA 3: BOTÕES ===================== -->
+    <section class="tab-content hidden grid grid-cols-12 gap-5" data-tab="buttons">
+        <div class="col-span-8 bg-hub-panel border border-hub-border rounded-2xl p-6 shadow-xl flex flex-col items-center relative overflow-hidden bg-carbon">
+            <div class="w-full">
+                <h2 class="card-title"><i class="fa-solid fa-crosshairs text-brand"></i>Mapeamento visual</h2>
+                <p class="text-xs text-gray-400">Números conforme o manual do volante. Clique numa etiqueta (ou no botão do desenho) para escolher; os botões acendem quando apertados</p>
+            </div>
+            <div id="map-box" class="relative my-3 w-full mx-auto" style="aspect-ratio: 1100 / 720">
+                <svg id="map-svg" viewBox="0 0 1100 720" class="absolute inset-0 w-full h-full"></svg>
+                <div id="pins" class="absolute inset-0"></div>
+            </div>
+            <div class="w-full bg-hub-card/80 p-3 rounded-xl border border-hub-border">
+                <div class="text-[10px] uppercase tracking-wider text-gray-400 font-bold mb-2">Botões físicos (acendem ao apertar)</div>
+                <div id="raw-buttons" class="flex flex-wrap gap-1.5"></div>
+                <div class="text-xs text-gray-400 mt-2" id="hat-text"></div>
+                <div class="text-[10px] uppercase tracking-wider text-gray-400 font-bold mt-3 mb-2">Câmbio (peça separada)</div>
+                <div id="shifter-chips" class="flex flex-wrap gap-1.5"></div>
+            </div>
+        </div>
+        <div class="col-span-4 card">
+            <div class="flex justify-between items-center border-b border-hub-border pb-3">
+                <h3 class="card-h !text-base"><i class="fa-solid fa-keyboard text-brand"></i>Botão selecionado</h3>
+                <span class="tag" id="pin-label">—</span>
+            </div>
+            <div class="bg-hub-bg p-4 rounded-xl border border-hub-border flex flex-col gap-3">
+                <div class="flex items-center justify-between text-xs">
+                    <span class="text-gray-300 font-semibold">Botão físico no volante</span>
+                    <span class="font-mono text-brand font-bold" id="pin-phys">—</span>
+                </div>
+                <button class="btn w-full justify-center" id="pin-detect" onclick="App.detectPin()"><i class="fa-solid fa-hand-pointer"></i>Detectar (aperte o botão)</button>
+                <label class="text-xs text-gray-300 font-semibold mt-1">No modo compatibilidade (Xbox), vira:</label>
+                <select id="pin-xbox" class="field" onchange="App.setPinXbox(this.value)"></select>
+            </div>
+            <div class="flex flex-col gap-2 overflow-y-auto max-h-[340px] pr-1">
+                <span class="text-xs text-gray-400 font-semibold">Resumo dos botões do volante</span>
+                <div id="pin-list" class="flex flex-col gap-1.5"></div>
+            </div>
+            <button class="btn btn-danger justify-center" onclick="App.resetMapping()"><i class="fa-solid fa-rotate-left"></i>Resetar mapeamento</button>
+            <p class="hint !mt-0">Volta os botões do volante, as marchas, o Park, a caixa alta/baixa e os botões de Xbox do perfil ativo ao padrão.</p>
+        </div>
+    </section>
+
+    <!-- ===================== ABA 4: FORCE FEEDBACK DO PROGRAMA ===================== -->
+    <section class="tab-content hidden grid grid-cols-12 gap-5" data-tab="ffb">
+        <div class="col-span-7 card">
+            <h3 class="card-h"><i class="fa-solid fa-microchip text-brand"></i>Força gerada pelo programa</h3>
+            <label class="check"><input type="checkbox" class="switch sm" data-bind="ffb.app_control"><span>O programa controla o force feedback neste perfil</span></label>
+            <p class="hint">Desligado: o jogo usa o force feedback normalmente (recomendado). Ligado: o programa aplica a centralização e o peso abaixo, e o jogo não consegue mandar força. No modo compatibilidade fica sempre ligado.</p>
+            <div class="slider-row"><span>Força geral</span><b data-label="ffb.gain" data-suffix="%"></b><input type="range" min="0" max="100" data-bind="ffb.gain"></div>
+            <div class="slider-row"><span>Centralização (mola)</span><b data-label="ffb.spring" data-suffix="%"></b><input type="range" min="0" max="100" data-bind="ffb.spring"></div>
+            <div class="slider-row"><span>Peso (amortecimento)</span><b data-label="ffb.damper" data-suffix="%"></b><input type="range" min="0" max="100" data-bind="ffb.damper"></div>
+            <div class="slider-row"><span>Vibração do jogo (modo compatibilidade)</span><b data-label="ffb.rumble" data-suffix="%"></b><input type="range" min="0" max="100" data-bind="ffb.rumble"></div>
+            <label class="check"><input type="checkbox" class="switch sm" data-bind="ffb.invert"><span>Inverter o lado da força</span></label>
+        </div>
+        <div class="col-span-5 card">
+            <h3 class="card-h"><i class="fa-solid fa-flask text-brand"></i>Testes</h3>
+            <div class="grid grid-cols-2 gap-2">
+                <button class="btn justify-center" onclick="App.ffbTest('push',-1)"><i class="fa-solid fa-arrow-left"></i>Empurrar p/ esquerda</button>
+                <button class="btn justify-center" onclick="App.ffbTest('push',1)">Empurrar p/ direita<i class="fa-solid fa-arrow-right"></i></button>
+                <button class="btn justify-center" onclick="App.ffbTest('vibrate')"><i class="fa-solid fa-wave-square"></i>Vibrar</button>
+                <button class="btn justify-center" onclick="App.ffbTest('spring')"><i class="fa-solid fa-arrows-to-dot"></i>Centralização (6 s)</button>
+                <button class="btn btn-danger justify-center col-span-2" onclick="App.ffbTest('stop')"><i class="fa-solid fa-stop"></i>Parar</button>
+            </div>
+            <p class="hint" id="ffb-error"></p>
+        </div>
+    </section>
+
+    <!-- ===================== ABA 5: COMPATIBILIDADE ===================== -->
+    <section class="tab-content hidden grid grid-cols-12 gap-5" data-tab="compat">
+        <div class="col-span-7 card">
+            <h3 class="card-h"><i class="fa-brands fa-xbox text-brand"></i>Modo compatibilidade (controle de Xbox virtual)</h3>
+            <label class="check"><input type="checkbox" class="switch sm" data-bind="compat.enabled"><span>Simular um controle de Xbox 360 neste perfil</span></label>
+            <p class="hint">Para jogos que não aceitam o volante (ex.: Dirt 5, Forza Motorsport). O volante vira o analógico esquerdo, o acelerador o gatilho direito e o freio o gatilho esquerdo; a vibração do jogo vai para o motor do volante. No jogo, escolha o controle (gamepad) e deixe zona morta e assistência de direção no mínimo. Os botões são escolhidos na aba Botões.</p>
+            <div class="flex items-center justify-between text-xs">
+                <span class="text-gray-300">Embreagem</span>
+                <select class="field w-64" data-bind="compat.clutch_to">
+                    <option value="none">Não usar</option>
+                    <option value="left_stick_y">Analógico esquerdo (vertical)</option>
+                </select>
+            </div>
+            <div class="svc-row"><span id="vigem-text"></span><button class="btn" id="vigem-btn" onclick="App.installVigem()"><i class="fa-solid fa-download"></i>Instalar driver</button></div>
+            <div class="svc-row"><span id="hidhide-text"></span><button class="btn" onclick="App.call('open_hidhide')"><i class="fa-solid fa-up-right-from-square"></i>Baixar HidHide</button></div>
+            <p class="hint text-amber-300/80" id="compat-error"></p>
+        </div>
+        <div class="col-span-5 flex flex-col gap-5">
+            <div class="card">
+                <h3 class="card-h"><i class="fa-brands fa-usb text-brand"></i>Modo USB do volante</h3>
+                <p class="hint !mt-0">PC DInput: volante de verdade, com force feedback (padrão). PC XInput: o volante se apresenta como controle de Xbox, sem precisar do controle virtual. Troca pelo Bluetooth.</p>
+                <div class="text-xs text-gray-300">Modo atual: <b class="text-brand" id="mode-now">—</b></div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button class="btn justify-center" onclick="App.switchMode(1)">Mudar para PC DInput</button>
+                    <button class="btn justify-center" onclick="App.switchMode(2)">Mudar para PC XInput</button>
+                </div>
+            </div>
+            <div class="card">
+                <h3 class="card-h"><i class="fa-solid fa-triangle-exclamation text-red-400"></i>Avançado</h3>
+                <button class="btn btn-danger justify-center" onclick="App.factoryReset()"><i class="fa-solid fa-rotate-left"></i>Restaurar padrão de fábrica do volante</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== ABA 6: OVERLAY ===================== -->
+    <section class="tab-content hidden grid grid-cols-12 gap-5" data-tab="overlay">
+        <div class="col-span-7 card">
+            <div class="flex items-center justify-between">
+                <h3 class="card-h"><i class="fa-solid fa-layer-group text-brand"></i>Barras dos pedais sobre o jogo</h3>
+                <input type="checkbox" class="switch" data-g="overlay.enabled">
+            </div>
+            <p class="hint !mt-0">Mostra embreagem, freio e acelerador por cima dos jogos. Funciona em jogos em janela ou "tela cheia sem bordas" (borderless). Em tela cheia exclusiva o Windows não mostra nada por cima.</p>
+            <label class="check"><input type="checkbox" class="switch sm" data-g="overlay.edit"><span>Posicionar com o mouse (arraste as barras na tela; desligue para os cliques passarem para o jogo)</span></label>
+            <div class="grid grid-cols-4 gap-2">
+                <button class="preset" onclick="App.overlayCorner('tl')"><span class="text-lg">↖</span><small>Sup. esquerdo</small></button>
+                <button class="preset" onclick="App.overlayCorner('tr')"><span class="text-lg">↗</span><small>Sup. direito</small></button>
+                <button class="preset" onclick="App.overlayCorner('bl')"><span class="text-lg">↙</span><small>Inf. esquerdo</small></button>
+                <button class="preset" onclick="App.overlayCorner('br')"><span class="text-lg">↘</span><small>Inf. direito</small></button>
+            </div>
+            <div class="slider-row"><span>Posição horizontal (X)</span><b data-glabel="overlay.x" data-suffix=" px"></b><input type="range" min="0" max="1920" data-g="overlay.x" id="ov-x"></div>
+            <div class="slider-row"><span>Posição vertical (Y)</span><b data-glabel="overlay.y" data-suffix=" px"></b><input type="range" min="0" max="1080" data-g="overlay.y" id="ov-y"></div>
+            <div class="slider-row"><span>Opacidade</span><b data-glabel="overlay.opacity" data-scale="100" data-suffix="%"></b><input type="range" min="15" max="100" data-g="overlay.opacity" data-scale="100"></div>
+            <div class="slider-row"><span>Tamanho</span><b data-glabel="overlay.scale" data-scale="100" data-suffix="%"></b><input type="range" min="50" max="250" step="5" data-g="overlay.scale" data-scale="100"></div>
+        </div>
+        <div class="col-span-5 flex flex-col gap-5">
+            <div class="card">
+                <h3 class="card-h"><i class="fa-solid fa-palette text-brand"></i>Aparência</h3>
+                <div class="flex items-center justify-between text-xs">
+                    <span class="text-gray-300">Orientação</span>
+                    <select class="field w-44" data-g="overlay.orientation">
+                        <option value="vertical">Barras em pé</option>
+                        <option value="horizontal">Barras deitadas</option>
+                    </select>
+                </div>
+                <label class="check"><input type="checkbox" class="switch sm" data-g="overlay.labels"><span>Mostrar letras (E, F, A)</span></label>
+                <label class="check"><input type="checkbox" class="switch sm" data-g="overlay.percent"><span>Mostrar porcentagem</span></label>
+                <div class="text-xs text-gray-300 font-semibold pt-1">Pedais exibidos</div>
+                <div class="flex gap-4">
+                    <label class="check"><input type="checkbox" class="switch sm" data-g="overlay.show.clutch"><span>Embreagem</span></label>
+                    <label class="check"><input type="checkbox" class="switch sm" data-g="overlay.show.brake"><span>Freio</span></label>
+                    <label class="check"><input type="checkbox" class="switch sm" data-g="overlay.show.throttle"><span>Acelerador</span></label>
+                </div>
+            </div>
+            <div class="card items-center">
+                <h3 class="card-h self-start"><i class="fa-solid fa-eye text-brand"></i>Prévia</h3>
+                <div class="bg-carbon rounded-xl border border-hub-border w-full h-56 flex items-center justify-center">
+                    <div id="ov-preview"></div>
+                </div>
+                <p class="hint self-start" id="ov-status"></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== ABA 7: PERFIS ===================== -->
+    <section class="tab-content hidden grid grid-cols-12 gap-5" data-tab="profiles">
+        <div class="col-span-6 card">
+            <h3 class="card-h"><i class="fa-solid fa-list text-brand"></i>Perfis <span class="text-[10px] text-gray-500 font-normal ml-1">(clique para ativar · lápis renomeia · lixeira exclui)</span></h3>
+            <div class="flex gap-2">
+                <button class="btn" onclick="App.profileNew()"><i class="fa-solid fa-plus"></i>Novo perfil</button>
+                <button class="btn" onclick="App.profileDuplicate()"><i class="fa-regular fa-copy"></i>Duplicar o ativo</button>
+            </div>
+            <div id="profile-list" class="flex flex-col gap-2 overflow-y-auto max-h-[460px] pr-1"></div>
+            <div class="flex gap-2 pt-2 border-t border-hub-border flex-wrap">
+                <button class="btn" onclick="App.importProfiles()"><i class="fa-solid fa-file-import"></i>Importar perfis…</button>
+                <button class="btn" onclick="App.exportProfiles('current')"><i class="fa-solid fa-file-export"></i>Exportar o ativo…</button>
+                <button class="btn" onclick="App.exportProfiles('all')"><i class="fa-solid fa-box-archive"></i>Exportar todos…</button>
+            </div>
+        </div>
+        <div class="col-span-6 card">
+            <h3 class="card-h"><i class="fa-solid fa-play text-brand"></i><span>Jogos que ativam “<span id="exes-profile"></span>”</span></h3>
+            <div id="exe-list" class="flex flex-wrap gap-2 min-h-[44px]"></div>
+            <div class="flex gap-2">
+                <button class="btn" onclick="App.pickRunning()"><i class="fa-solid fa-list-check"></i>Escolher jogo aberto…</button>
+                <button class="btn" onclick="App.typeExe()"><i class="fa-solid fa-keyboard"></i>Digitar .exe…</button>
+            </div>
+            <label class="check pt-2 border-t border-hub-border"><input type="checkbox" class="switch sm" data-g="auto_switch"><span>Trocar de perfil sozinho quando o jogo abrir</span></label>
+            <p class="hint">Dica: abra o jogo e use "Escolher jogo aberto" para pegar o nome certo do .exe. Quando o jogo fecha, volta o último perfil escolhido à mão.</p>
+        </div>
+    </section>
+</div>
+</main>
+
+<!-- ===================== RODAPÉ ===================== -->
+<footer class="bg-hub-panel border-t border-hub-border py-2 px-6 text-xs text-gray-500 shrink-0">
+    <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-4">
+            <span>Firmware: <strong class="text-gray-300 font-mono" id="fw-tag">—</strong></span><span>•</span>
+            <span>Modo: <strong class="text-gray-300 font-mono" id="mode-tag">—</strong></span><span>•</span>
+            <span id="msg-line" class="text-gray-400"></span>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="zoom-ctl" title="Proporção da interface (Ctrl + / Ctrl - / Ctrl 0, ou Ctrl + roda do mouse)">
+                <i class="fa-solid fa-magnifying-glass text-gray-500"></i>
+                <button onclick="App.zoomStep(-1)" title="Reduzir"><i class="fa-solid fa-minus"></i></button>
+                <span id="zoom-val">100%</span>
+                <button onclick="App.zoomStep(1)" title="Aumentar"><i class="fa-solid fa-plus"></i></button>
+                <button onclick="App.zoomAuto()" id="zoom-auto" title="Ajustar automaticamente à tela">Auto</button>
+            </div>
+            <span>G500 Config <span id="app-version"></span> • protocolo LITE STAR</span>
+        </div>
+    </div>
+</footer>
+
+<!-- aviso -->
+<div id="toast" class="fixed bottom-12 right-6 bg-hub-card border border-brand text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 translate-y-20 opacity-0 transition-all duration-300 z-50 pointer-events-none">
+    <i class="fa-solid fa-circle-check text-brand text-lg" id="toast-icon"></i>
+    <span id="toast-text" class="text-xs font-semibold"></span>
+</div>
+
+<!-- janela de diálogo -->
+<div id="modal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center">
+    <div class="bg-hub-panel border border-hub-border rounded-2xl p-6 w-[440px] shadow-2xl flex flex-col gap-4">
+        <h3 class="font-display font-bold text-lg text-white" id="modal-title"></h3>
+        <div id="modal-body" class="text-sm text-gray-300"></div>
+        <div class="flex justify-end gap-2">
+            <button class="btn" id="modal-cancel">Cancelar</button>
+            <button class="btn-primary" id="modal-ok">OK</button>
+        </div>
+    </div>
+</div>
+
+<script src="wheels.js"></script>
+<script src="art.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G HUB Sim-Control Center</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Rajdhani:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        hub: {
+                            bg: '#0b0c10',
+                            panel: '#12151c',
+                            card: '#181c26',
+                            border: '#242b3b',
+                            hover: '#2a3245',
+                            text: '#e1e7f0',
+                            kalkam: '#00f0ff',
+                            pcyes: '#ff2a4b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Rajdhani', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --brand-primary: #00f0ff;
+            --brand-glow: rgba(0, 240, 255, 0.3);
+            --brand-dark: #008899;
+        }
+
+        body.pcyes-theme {
+            --brand-primary: #ff2a4b;
+            --brand-glow: rgba(255, 42, 75, 0.35);
+            --brand-dark: #b3001b;
+        }
+
+        .text-brand { color: var(--brand-primary); }
+        .bg-brand { background-color: var(--brand-primary); }
+        .border-brand { border-color: var(--brand-primary); }
+        .shadow-brand-glow { box-shadow: 0 0 20px var(--brand-glow); }
+
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0b0c10; }
+        ::-webkit-scrollbar-thumb { background: #242b3b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--brand-primary); }
+
+        /* Custom Range Input */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type=range]:focus { outline: none; }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            background: #1e2433;
+            border-radius: 3px;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            height: 18px;
+            width: 18px;
+            border-radius: 50%;
+            background: var(--brand-primary);
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -6px;
+            box-shadow: 0 0 12px var(--brand-glow);
+            transition: all 0.15s ease;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.25);
+        }
+
+        /* Carbon fiber texture overlay */
+        .bg-carbon {
+            background-color: #0d0f14;
+            background-image: radial-gradient(#1c2230 15%, transparent 16%), radial-gradient(#1c2230 15%, transparent 16%);
+            background-size: 12px 12px;
+            background-position: 0 0, 6px 6px;
+        }
+
+        /* Smooth Tab Animations */
+        .tab-content {
+            transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+        }
+        .tab-content.hidden {
+            display: none;
+            opacity: 0;
+            transform: translateY(8px);
+        }
+
+        /* Pulse Pin Animation */
+        @keyframes pulseGlow {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 var(--brand-glow); }
+            70% { transform: scale(1.2); box-shadow: 0 0 0 10px rgba(0,0,0,0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,0,0,0); }
+        }
+        .pin-active {
+            animation: pulseGlow 1.8s infinite;
+        }
+    </style>
+</head>
+<body class="bg-hub-bg text-hub-text font-sans min-h-screen flex flex-col antialiased selection:bg-brand selection:text-black">
+
+    <!-- TOP G HUB DEVICE SELECTOR HEADER -->
+    <header class="bg-hub-panel border-b border-hub-border sticky top-0 z-50 px-4 lg:px-8 py-3">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            
+            <!-- Logo & Brand Badge -->
+            <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-start">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-gray-800 to-black border border-hub-border flex items-center justify-center text-white font-extrabold text-xl font-display shadow-lg">
+                        <i class="fa-solid fa-gamepad text-brand transition-colors duration-300"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 class="font-display font-extrabold text-xl tracking-wider text-white uppercase">G HUB CONTROL</h1>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-brand/10 text-brand border border-brand/30 transition-all duration-300" id="device-model-badge">PRO DD SERIES</span>
+                        </div>
+                        <p class="text-xs text-gray-400">Gerenciador de Hardware & Telemetria em Tempo Real</p>
+                    </div>
+                </div>
+
+                <!-- Live USB Connectivity Badge -->
+                <div class="flex items-center gap-2 bg-hub-bg px-3 py-1.5 rounded-lg border border-hub-border text-xs">
+                    <span class="relative flex h-2.5 w-2.5">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                    </span>
+                    <span class="text-emerald-400 font-medium hidden sm:inline">Dispositivo Ativo</span>
+                    <span class="text-gray-500 hidden sm:inline">•</span>
+                    <span class="text-gray-300 font-mono text-[11px]" id="device-conn-info">USB 3.0 (1000Hz)</span>
+                </div>
+            </div>
+
+            <!-- DYNAMIC DEVICE SWITCHER TABS -->
+            <div class="flex items-center gap-3 bg-hub-bg p-1.5 rounded-xl border border-hub-border w-full md:w-auto justify-center">
+                
+                <!-- Kalkam G500 Tab -->
+                <button onclick="switchDevice('kalkam')" id="btn-device-kalkam" class="flex items-center gap-2.5 px-4 py-2 rounded-lg text-xs font-bold transition-all duration-300 bg-hub-card text-hub-kalkam border border-hub-kalkam/40 shadow-lg shadow-hub-kalkam/10">
+                    <div class="w-2.5 h-2.5 rounded-full bg-hub-kalkam"></div>
+                    <span>Kalkam G500</span>
+                </button>
+
+                <!-- PCyes W270 Tab -->
+                <button onclick="switchDevice('pcyes')" id="btn-device-pcyes" class="flex items-center gap-2.5 px-4 py-2 rounded-lg text-xs font-bold transition-all duration-300 text-gray-400 hover:text-white border border-transparent">
+                    <div class="w-2.5 h-2.5 rounded-full bg-hub-pcyes opacity-50"></div>
+                    <span>PCyes W270</span>
+                </button>
+
+                <!-- Auto-Detect Sim Button -->
+                <button onclick="simulateAutoDetect()" class="bg-hub-card hover:bg-hub-hover border border-hub-border text-gray-300 hover:text-white px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5" title="Simular Auto-Detecção de Hardware">
+                    <i class="fa-solid fa-arrows-rotate text-brand"></i>
+                    <span class="hidden lg:inline">Auto-Detectar</span>
+                </button>
+
+            </div>
+
+        </div>
+    </header>
+
+    <!-- MAIN HUB LAYOUT CONTAINER -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-6 flex flex-col gap-6">
+
+        <!-- PROFILE & SUB-HEADER STRIP -->
+        <div class="bg-hub-panel border border-hub-border rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+                <i class="fa-solid fa-folder-open text-brand text-lg"></i>
+                <div>
+                    <span class="text-[10px] uppercase tracking-wider text-gray-400 font-bold block">Perfil Ativo</span>
+                    <select id="profile-select" onchange="loadProfilePreset(this.value)" class="bg-hub-bg text-white font-bold text-sm rounded-lg px-3 py-1.5 border border-hub-border outline-none cursor-pointer focus:border-brand">
+                        <option value="ets2">Euro Truck Simulator 2 (Suave / 900°)</option>
+                        <option value="assetto">Assetto Corsa (Competição / 540°)</option>
+                        <option value="forza">Forza Horizon 5 (Esportivo / 900°)</option>
+                        <option value="f1">F1 2024 (Fórmula / 360°)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                <button onclick="saveProfile()" class="bg-brand text-black font-extrabold text-xs px-4 py-2 rounded-lg transition-all shadow-brand-glow hover:brightness-110 active:scale-95 flex items-center gap-2">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    <span>Salvar Perfil</span>
+                </button>
+                <button onclick="resetDefaults()" class="bg-hub-bg hover:bg-red-500/10 border border-hub-border hover:border-red-500/30 text-gray-400 hover:text-red-400 font-semibold text-xs px-3 py-2 rounded-lg transition-all active:scale-95">
+                    <i class="fa-solid fa-rotate-left"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- LOGITECH G HUB STYLE NAVIGATION TABS -->
+        <nav class="flex items-center gap-2 border-b border-hub-border overflow-x-auto pb-1 scrollbar-none">
+            <button onclick="switchTab('tab-steering')" id="nav-tab-steering" class="tab-btn text-brand border-b-2 border-brand bg-brand/5 font-bold text-sm px-5 py-3 rounded-t-xl transition-all flex items-center gap-2.5 whitespace-nowrap">
+                <i class="fa-solid fa-steering-wheel text-lg"></i>
+                <span>Sensibilidade e Ângulo</span>
+            </button>
+            <button onclick="switchTab('tab-pedals')" id="nav-tab-pedals" class="tab-btn text-gray-400 hover:text-gray-200 border-b-2 border-transparent font-medium text-sm px-5 py-3 rounded-t-xl transition-all flex items-center gap-2.5 whitespace-nowrap">
+                <i class="fa-solid fa-gauge-high text-lg"></i>
+                <span>Pedais e Câmbio H</span>
+            </button>
+            <button onclick="switchTab('tab-buttons')" id="nav-tab-buttons" class="tab-btn text-gray-400 hover:text-gray-200 border-b-2 border-transparent font-medium text-sm px-5 py-3 rounded-t-xl transition-all flex items-center gap-2.5 whitespace-nowrap">
+                <i class="fa-solid fa-gamepad text-lg"></i>
+                <span>Mapeamento de Botões</span>
+            </button>
+        </nav>
+
+        <!-- TAB CONTENT CONTAINERS -->
+        <div class="relative min-h-[580px]">
+
+            <!-- ==================== TAB 1: SENSIBILIDADE E ÂNGULO ==================== -->
+            <section id="tab-steering" class="tab-content grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- REAL-TIME 2D INTERACTIVE WHEEL VIEW (LEFT) -->
+                <div class="lg:col-span-7 bg-hub-panel border border-hub-border rounded-2xl p-6 flex flex-col justify-between items-center relative overflow-hidden shadow-2xl bg-carbon">
+                    
+                    <div class="w-full flex justify-between items-center z-10">
+                        <div>
+                            <h2 class="text-base font-bold text-white font-display uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-circle-dot text-brand"></i>
+                                Visualização Dinâmica do Aro
+                            </h2>
+                            <p class="text-xs text-gray-400">Giro em tempo real sincronizado com a física do simulador</p>
+                        </div>
+                        <div class="bg-hub-bg/90 backdrop-blur px-3 py-1.5 rounded-xl border border-hub-border flex items-center gap-2">
+                            <span class="text-xs text-gray-400">Ângulo Atual:</span>
+                            <span id="current-angle-text" class="font-display font-extrabold text-lg text-brand">0°</span>
+                        </div>
+                    </div>
+
+                    <!-- ROTATABLE SVG WHEEL DISPLAY -->
+                    <div class="relative my-8 flex items-center justify-center w-full max-w-[360px] aspect-square">
+                        <!-- Center Line Marker -->
+                        <div class="absolute inset-y-0 w-[1px] bg-brand/30 border-dashed border-l border-brand/50 pointer-events-none"></div>
+                        
+                        <!-- Rotatable Container -->
+                        <div id="wheel-svg-wrapper" class="w-full h-full transition-transform duration-75 ease-out transform origin-center drop-shadow-[0_15px_30px_rgba(0,0,0,0.9)]">
+                            
+                            <!-- SVG WILL BE DYNAMICALY injected BY JS BASED ON ACTIVE DEVICE -->
+                            <svg id="wheel-svg" viewBox="0 0 400 400" class="w-full h-full">
+                                <!-- Dynamic Content Injected Here -->
+                            </svg>
+
+                        </div>
+                    </div>
+
+                    <!-- MANUAL TEST STEER SLIDER -->
+                    <div class="w-full bg-hub-card/90 backdrop-blur p-4 rounded-xl border border-hub-border z-10 flex flex-col gap-2">
+                        <div class="flex justify-between items-center text-xs font-semibold">
+                            <span class="text-gray-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-sliders text-brand"></i> Testar Esterço Manual:
+                            </span>
+                            <button onclick="resetSteerAngle()" class="text-brand hover:underline text-[11px] font-bold">Centralizar (0°)</button>
+                        </div>
+                        <input type="range" id="steer-input-slider" min="-540" max="540" value="0" oninput="onSteerSliderInput(this.value)" class="w-full">
+                        <div class="flex justify-between text-[10px] text-gray-500 font-mono font-bold">
+                            <span>-MAX</span>
+                            <span>0° (CENTRO)</span>
+                            <span>+MAX</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- RIGHT COLUMN: ANGLE, FORCE FEEDBACK & LINEARITY -->
+                <div class="lg:col-span-5 flex flex-col gap-6">
+                    
+                    <!-- ANGLE LOCK PRESETS -->
+                    <div class="bg-hub-panel border border-hub-border rounded-2xl p-6 shadow-xl flex flex-col gap-5">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-white text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-compass text-brand"></i>
+                                Trava de Ângulo (Lock Angle)
+                            </h3>
+                            <span id="max-angle-badge" class="bg-brand/10 text-brand border border-brand/30 text-xs font-bold px-2.5 py-1 rounded-md">900°</span>
+                        </div>
+
+                        <!-- Presets -->
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="setAngleLock(270)" class="angle-lock-btn bg-hub-bg hover:bg-hub-hover border border-hub-border text-gray-300 py-2 rounded-lg text-xs font-bold transition-all" data-angle="270">270° (Kart)</button>
+                            <button onclick="setAngleLock(540)" class="angle-lock-btn bg-hub-bg hover:bg-hub-hover border border-hub-border text-gray-300 py-2 rounded-lg text-xs font-bold transition-all" data-angle="540">540° (GT3/Rally)</button>
+                            <button onclick="setAngleLock(900)" class="angle-lock-btn active bg-brand/20 border border-brand text-brand py-2 rounded-lg text-xs font-bold transition-all" data-angle="900">900° (Rua/Truck)</button>
+                        </div>
+
+                        <div class="flex flex-col gap-2 pt-1">
+                            <div class="flex justify-between text-xs">
+                                <span class="text-gray-400">Ajuste Fino de Rotação</span>
+                                <span id="angle-val-display" class="text-white font-bold">900°</span>
+                            </div>
+                            <input type="range" id="angle-fine-slider" min="180" max="1080" step="10" value="900" oninput="onFineAngleInput(this.value)">
+                        </div>
+                    </div>
+
+                    <!-- FORCE FEEDBACK & LINEARITY GRAPH -->
+                    <div class="bg-hub-panel border border-hub-border rounded-2xl p-6 shadow-xl flex flex-col gap-5">
+                        <h3 class="font-bold text-white text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-bolt text-brand"></i>
+                            Force Feedback & Resposta
+                        </h3>
+
+                        <!-- FFB Gain -->
+                        <div class="flex flex-col gap-1.5">
+                            <div class="flex justify-between text-xs">
+                                <span class="text-gray-300">Força Geral (FFB Gain)</span>
+                                <span id="ffb-val-label" class="text-brand font-bold">85%</span>
+                            </div>
+                            <input type="range" id="ffb-gain-slider" min="0" max="100" value="85" oninput="document.getElementById('ffb-val-label').textContent = this.value + '%'">
+                        </div>
+
+                        <!-- Centering Spring -->
+                        <div class="flex flex-col gap-1.5">
+                            <div class="flex justify-between text-xs">
+                                <span class="text-gray-300">Mola de Retorno Central</span>
+                                <span id="spring-val-label" class="text-brand font-bold">20%</span>
+                            </div>
+                            <input type="range" min="0" max="100" value="20" oninput="document.getElementById('spring-val-label').textContent = this.value + '%'">
+                        </div>
+
+                        <!-- Steering Linearity & Canvas -->
+                        <div class="flex flex-col gap-2 pt-2 border-t border-hub-border">
+                            <div class="flex justify-between text-xs">
+                                <span class="text-gray-300">Curva de Lineariedade</span>
+                                <span id="linearity-val-label" class="text-brand font-bold">50 (Linear)</span>
+                            </div>
+                            <input type="range" id="linearity-slider" min="0" max="100" value="50" oninput="updateLinearityCanvas(this.value)">
+                            
+                            <div class="bg-hub-bg rounded-xl border border-hub-border p-3 flex flex-col items-center mt-2">
+                                <canvas id="linearity-canvas" width="280" height="90" class="w-full h-20 bg-hub-panel rounded-lg border border-hub-border"></canvas>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- ==================== TAB 2: PEDAIS E CÂMBIO ==================== -->
+            <section id="tab-pedals" class="tab-content hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- LIVE PEDALS TELEMETRY (LEFT) -->
+                <div class="lg:col-span-7 bg-hub-panel border border-hub-border rounded-2xl p-6 shadow-xl flex flex-col justify-between gap-6">
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <h2 class="text-base font-bold text-white font-display uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-chart-simple text-brand"></i>
+                                Telemetria do Conjunto de Pedais (3 Pedais)
+                            </h2>
+                            <span class="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded font-mono font-bold">LIVE AXIS</span>
+                        </div>
+                        <p class="text-xs text-gray-400">Pressione os pedais físicos ou ajuste os controles de teste abaixo</p>
+                    </div>
+
+                    <!-- PEDAL GAUGES -->
+                    <div class="flex flex-col gap-5 my-2">
+                        
+                        <!-- Clutch Bar -->
+                        <div class="flex flex-col gap-2">
+                            <div class="flex justify-between items-center text-xs font-bold">
+                                <span class="text-brand flex items-center gap-2"><i class="fa-solid fa-gear"></i> EMBREAGEM (CLUTCH)</span>
+                                <span id="clutch-val" class="font-mono text-white">0%</span>
+                            </div>
+                            <div class="w-full h-5 bg-hub-bg rounded-lg border border-hub-border p-1 overflow-hidden">
+                                <div id="clutch-bar" class="h-full bg-brand rounded transition-all duration-75 w-0 shadow-brand-glow"></div>
+                            </div>
+                        </div>
+
+                        <!-- Brake Bar -->
+                        <div class="flex flex-col gap-2">
+                            <div class="flex justify-between items-center text-xs font-bold">
+                                <span class="text-red-500 flex items-center gap-2"><i class="fa-solid fa-stop"></i> FREIO (BRAKE LOADCELL)</span>
+                                <span id="brake-val" class="font-mono text-white">0%</span>
+                            </div>
+                            <div class="w-full h-5 bg-hub-bg rounded-lg border border-hub-border p-1 overflow-hidden">
+                                <div id="brake-bar" class="h-full bg-gradient-to-r from-red-600 to-red-400 rounded transition-all duration-75 w-0 shadow-lg shadow-red-500/20"></div>
+                            </div>
+                        </div>
+
+                        <!-- Throttle Bar -->
+                        <div class="flex flex-col gap-2">
+                            <div class="flex justify-between items-center text-xs font-bold">
+                                <span class="text-emerald-400 flex items-center gap-2"><i class="fa-solid fa-gauge"></i> ACELERADOR (THROTTLE)</span>
+                                <span id="throttle-val" class="font-mono text-white">0%</span>
+                            </div>
+                            <div class="w-full h-5 bg-hub-bg rounded-lg border border-hub-border p-1 overflow-hidden">
+                                <div id="throttle-bar" class="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 rounded transition-all duration-75 w-0 shadow-lg shadow-emerald-500/20"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- PEDAL SIMULATOR SLIDERS -->
+                    <div class="bg-hub-card p-4 rounded-xl border border-hub-border flex flex-col gap-3">
+                        <span class="text-xs font-semibold text-gray-300">Simular Pressão nos Pedais:</span>
+                        <div class="grid grid-cols-3 gap-3">
+                            <div>
+                                <label class="text-[10px] text-gray-400 block mb-1">Embreagem</label>
+                                <input type="range" min="0" max="100" value="0" oninput="updatePedalBar('clutch', this.value)">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-gray-400 block mb-1">Freio</label>
+                                <input type="range" min="0" max="100" value="0" oninput="updatePedalBar('brake', this.value)">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-gray-400 block mb-1">Acelerador</label>
+                                <input type="range" min="0" max="100" value="0" oninput="updatePedalBar('throttle', this.value)">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- H-SHIFTER & PEDAL CALIBRATION (RIGHT) -->
+                <div class="lg:col-span-5 flex flex-col gap-6">
+                    
+                    <!-- H-PATTERN SHIFTER INTERACTIVE TESTER -->
+                    <div class="bg-hub-panel border border-hub-border rounded-2xl p-6 shadow-xl flex flex-col gap-4">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-white text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-head-side-gear text-brand"></i>
+                                Câmbio H-Pattern (6 Marchas + Ré)
+                            </h3>
+                            <span id="active-gear-display" class="bg-brand/20 border border-brand text-brand font-mono font-extrabold text-sm px-3 py-1 rounded-lg">MARCHA: N</span>
+                        </div>
+
+                        <p class="text-xs text-gray-400">Clique na marcha abaixo para engatar e testar o sensor do câmbio:</p>
+
+                        <!-- H-Shifter Visual Grid -->
+                        <div class="bg-hub-bg rounded-2xl border border-hub-border p-5 flex justify-center items-center">
+                            <div class="grid grid-cols-4 gap-3 w-full max-w-[260px]">
+                                <button onclick="setGear('1')" class="gear-btn bg-hub-card hover:bg-hub-hover border border-hub-border font-mono font-bold text-white p-3 rounded-xl transition-all text-sm" data-gear="1">1</button>
+                                <button onclick="setGear('3')" class="gear-btn bg-hub-card hover:bg-hub-hover border border-hub-border font-mono font-bold text-white p-3 rounded-xl transition-all text-sm" data-gear="3">3</button>
+                                <button onclick="setGear('5')" class="gear-btn bg-hub-card hover:bg-hub-hover border border-hub-border font-mono font-bold text-white p-3 rounded-xl transition-all text-sm" data-gear="5">5</button>
+                                <button onclick="setGear('R')" class="gear-btn bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 font-mono font-bold text-red-400 p-3 rounded-xl transition-all text-sm" data-gear="R">R</button>
+
+                                <button onclick="setGear('2')" class="gear-btn bg-hub-card hover:bg-hub-hover border border-hub-border font-mono font-bold text-white p-3 rounded-xl transition-all text-sm" data-gear="2">2</button>
+                                <button onclick="setGear('4')" class="gear-btn bg-hub-card hover:bg-hub-hover border border-hub-border font-mono font-bold text-white p-3 rounded-xl transition-all text-sm" data-gear="4">4</button>
+                                <button onclick="setGear('6')" class="gear-btn bg-hub-card hover:bg-hub-hover border border-hub-border font-mono font-bold text-white p-3 rounded-xl transition-all text-sm" data-gear="6">6</button>
+                                <button onclick="setGear('N')" class="gear-btn bg-brand/20 border border-brand font-mono font-bold text-brand p-3 rounded-xl transition-all text-sm" data-gear="N">N</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- PEDAL CALIBRATION & HARDWARE INFO -->
+                    <div class="bg-hub-panel border border-hub-border rounded-2xl p-6 shadow-xl flex flex-col gap-4">
+                        <h3 class="font-bold text-white text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-brand"></i>
+                            Calibração de Zonas Mortas
+                        </h3>
+
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="text-gray-300">Zona Morta Inicial do Freio:</span>
+                            <div class="flex items-center gap-1">
+                                <input type="number" value="3" class="w-16 bg-hub-bg border border-hub-border rounded px-2 py-1 text-center font-mono text-white text-xs">
+                                <span class="text-gray-500">%</span>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center text-xs pt-2 border-t border-hub-border">
+                            <span class="text-gray-300">Saturação Máxima do Acelerador:</span>
+                            <div class="flex items-center gap-1">
+                                <input type="number" value="98" class="w-16 bg-hub-bg border border-hub-border rounded px-2 py-1 text-center font-mono text-white text-xs">
+                                <span class="text-gray-500">%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- ==================== TAB 3: MAPEAMENTO DE BOTÕES ==================== -->
+            <section id="tab-buttons" class="tab-content hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- VISUAL HOTSPOT OVERLAY ON WHEEL (LEFT) -->
+                <div class="lg:col-span-7 bg-hub-panel border border-hub-border rounded-2xl p-6 shadow-xl flex flex-col justify-between items-center relative overflow-hidden bg-carbon">
+                    <div class="w-full mb-2">
+                        <h2 class="text-base font-bold text-white font-display uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-crosshairs text-brand"></i>
+                            Mapeamento Visual por Hotspots
+                        </h2>
+                        <p class="text-xs text-gray-400">Clique nos pinos interativos sobre os botões reais do modelo</p>
+                    </div>
+
+                    <!-- HOTSPOT OVERLAY CONTAINER -->
+                    <div class="relative my-4 w-full max-w-[360px] aspect-square flex items-center justify-center">
+                        
+                        <!-- Static Background Wheel Graphic matching device -->
+                        <div class="w-full h-full opacity-75">
+                            <svg id="mapping-wheel-svg" viewBox="0 0 400 400" class="w-full h-full">
+                                <!-- Dynamic SVG Injected -->
+                            </svg>
+                        </div>
+
+                        <!-- HOTSPOT PINS (ABSOLUTE OVER SVG) -->
+                        <div id="hotspot-pins-container">
+                            <!-- Pins will be dynamically updated based on active wheel -->
+                        </div>
+
+                    </div>
+
+                    <div class="w-full bg-hub-card/80 backdrop-blur p-3 rounded-xl border border-hub-border text-center">
+                        <span class="text-xs text-gray-400">Pressione um botão no seu volante físico para destacá-lo</span>
+                    </div>
+
+                </div>
+
+                <!-- BUTTON ASSIGNMENT PANEL (RIGHT) -->
+                <div class="lg:col-span-5 bg-hub-panel border border-hub-border rounded-2xl p-6 shadow-xl flex flex-col gap-5">
+                    <div class="flex justify-between items-center border-b border-hub-border pb-3">
+                        <h3 class="font-bold text-white text-base flex items-center gap-2">
+                            <i class="fa-solid fa-keyboard text-brand"></i>
+                            Atribuição de Comando
+                        </h3>
+                        <span id="selected-pin-label" class="text-xs font-bold text-brand bg-brand/10 px-2.5 py-1 rounded border border-brand/30">L1 - Paddle Esq</span>
+                    </div>
+
+                    <!-- Quick Assignment Box -->
+                    <div class="bg-hub-bg p-4 rounded-xl border border-hub-border flex flex-col gap-3">
+                        <label class="text-xs text-gray-300 font-semibold">Ação Atribuída ao Botão Selecionado:</label>
+                        <select id="action-select" onchange="assignActionToButton(this.value)" class="w-full bg-hub-card text-white text-xs font-bold rounded-lg p-2.5 border border-hub-border outline-none focus:border-brand">
+                            <option value="SHIFT_DOWN">Reduzir Marcha (Paddle Left)</option>
+                            <option value="SHIFT_UP">Aumentar Marcha (Paddle Right)</option>
+                            <option value="DRS">DRS / Asa Traseira</option>
+                            <option value="PIT">Limitador de Vel. (Pit Lane)</option>
+                            <option value="LOOK_LEFT">Olhar para Esquerda</option>
+                            <option value="LOOK_RIGHT">Olhar para Direita</option>
+                            <option value="HORNS">Buzina / Sinal de Luz</option>
+                            <option value="TC_PLUS">Controle de Tração +</option>
+                            <option value="ABS_PLUS">Freio ABS +</option>
+                        </select>
+                    </div>
+
+                    <!-- MAPPING LIST TABLE -->
+                    <div class="flex flex-col gap-2 overflow-y-auto max-h-[280px] pr-1">
+                        <span class="text-xs text-gray-400 font-semibold">Resumo dos Botões do Modelo:</span>
+                        <div id="mapping-summary-list" class="flex flex-col gap-2">
+                            <!-- Dynamic mapping rows -->
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+    <!-- FOOTER STATUS BAR -->
+    <footer class="bg-hub-panel border-t border-hub-border py-2.5 px-4 lg:px-8 text-xs text-gray-500">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+            <div class="flex items-center gap-4">
+                <span>Versão do Firmware: <strong class="text-gray-300 font-mono" id="firmware-tag">v3.0.1-KALKAM</strong></span>
+                <span>•</span>
+                <span>Polling Rate: <strong class="text-emerald-400 font-mono">1000 Hz (1ms)</strong></span>
+            </div>
+            <div>
+                <span class="text-gray-400">Logitech G HUB Compatible Interface • 2026</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- TOAST NOTIFICATION BOX -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-hub-card border border-brand text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transform translate-y-20 opacity-0 transition-all duration-300 z-50 pointer-events-none">
+        <i class="fa-solid fa-circle-check text-brand text-lg"></i>
+        <span id="toast-text" class="text-xs font-semibold">Configuração atualizada!</span>
+    </div>
+
+    <!-- APP SCRIPT LOGIC -->
+    <script>
+        // --- DEVICE MODELS & DATA ---
+        let currentDevice = 'kalkam'; // 'kalkam' or 'pcyes'
+        let currentAngle = 0;
+        let maxAngle = 900;
+        let activeGear = 'N';
+        let selectedHotspotId = 'paddle-l';
+
+        const deviceConfigs = {
+            kalkam: {
+                name: 'Kalkam G500',
+                badge: 'PRO DIRECT DRIVE',
+                conn: 'USB 3.0 (1000Hz)',
+                firmware: 'v3.0.1-KALKAM',
+                themeClass: '',
+                themeColor: '#00f0ff',
+                hotspots: [
+                    { id: 'paddle-l', label: 'Paddle Esq (L1)', x: '10%', y: '30%', defaultAction: 'Reduzir Marcha' },
+                    { id: 'paddle-r', label: 'Paddle Dir (R1)', x: '90%', y: '30%', defaultAction: 'Aumentar Marcha' },
+                    { id: 'dpad', label: 'D-Pad Direcional', x: '26%', y: '42%', defaultAction: 'Navegação' },
+                    { id: 'btn-y', label: 'Botão Y (Amarelo)', x: '72%', y: '36%', defaultAction: 'Olhar para Trás' },
+                    { id: 'btn-x', label: 'Botão X (Azul)', x: '66%', y: '42%', defaultAction: 'DRS / Asa' },
+                    { id: 'btn-a', label: 'Botão A (Verde)', x: '72%', y: '48%', defaultAction: 'Limitador de Pit' },
+                    { id: 'btn-b', label: 'Botão B (Vermelho)', x: '78%', y: '42%', defaultAction: 'Buzina' },
+                    { id: 'btn-mode-1', label: 'Botão Esquerdo L2', x: '32%', y: '58%', defaultAction: 'Mudar Visão' },
+                    { id: 'btn-mode-2', label: 'Botão Direito R2', x: '68%', y: '58%', defaultAction: 'Farol' }
+                ]
+            },
+            pcyes: {
+                name: 'PCyes W270',
+                badge: 'DUAL-MOTOR FORCE',
+                conn: 'USB 2.0/3.0 (500Hz)',
+                firmware: 'v1.8.2-PCYES',
+                themeClass: 'pcyes-theme',
+                themeColor: '#ff2a4b',
+                hotspots: [
+                    { id: 'paddle-l', label: 'Borboleta Esq', x: '12%', y: '32%', defaultAction: 'Reduzir Marcha' },
+                    { id: 'paddle-r', label: 'Borboleta Dir', x: '88%', y: '32%', defaultAction: 'Aumentar Marcha' },
+                    { id: 'dpad', label: 'D-Pad Central', x: '27%', y: '42%', defaultAction: 'Navegação Menu' },
+                    { id: 'btn-1', label: 'Botão 1 (A/X)', x: '68%', y: '42%', defaultAction: 'Aceleração Nitro' },
+                    { id: 'btn-2', label: 'Botão 2 (B/O)', x: '74%', y: '42%', defaultAction: 'Freio de Mão' },
+                    { id: 'btn-3', label: 'Botão 3 (Y/Δ)', x: '70%', y: '36%', defaultAction: 'Câmera' },
+                    { id: 'btn-4', label: 'Botão 4 (X/□)', x: '70%', y: '48%', defaultAction: 'Limpar Viseira' },
+                    { id: 'btn-row-l', label: 'Painel Inf. Esq', x: '35%', y: '55%', defaultAction: 'TC -' },
+                    { id: 'btn-row-r', label: 'Painel Inf. Dir', x: '65%', y: '55%', defaultAction: 'TC +' }
+                ]
+            }
+        };
+
+        const activeMappings = {
+            kalkam: {},
+            pcyes: {}
+        };
+
+        // Initialize default mappings
+        Object.keys(deviceConfigs).forEach(dev => {
+            deviceConfigs[dev].hotspots.forEach(hp => {
+                activeMappings[dev][hp.id] = hp.defaultAction;
+            });
+        });
+
+        // --- SVG WHEEL GENERATORS MATCHING PROMPT IMAGES ---
+        
+        // Image 1: Kalkam G500 Vector
+        function generateKalkamSvg() {
+            return `
+                <!-- Outer Leather Rim -->
+                <circle cx="200" cy="200" r="175" fill="none" stroke="#12151c" stroke-width="32" />
+                <circle cx="200" cy="200" r="175" fill="none" stroke="#252c3d" stroke-width="26" stroke-dasharray="10 5" />
+                
+                <!-- Red Center Alignment Top Marker (Image 1) -->
+                <path d="M 191 26 A 175 175 0 0 1 209 26" fill="none" stroke="#ff2a4b" stroke-width="28" />
+
+                <!-- Metallic Winged Faceplate (Image 1 curved silver frame) -->
+                <path d="M 70 180 C 130 190 150 200 150 250 L 175 290 L 225 290 L 250 250 C 250 200 270 190 330 180 L 320 220 C 260 220 230 250 220 310 L 180 310 C 170 250 140 220 80 220 Z" fill="#94a3b8" stroke="#cbd5e1" stroke-width="2" />
+
+                <!-- Curved Spokes Inner Shadow -->
+                <path d="M 75 185 C 130 195 155 210 155 245 L 178 285 L 222 285 L 245 245 C 245 210 270 195 325 185" fill="none" stroke="#475569" stroke-width="3" />
+
+                <!-- Round Center Hub Cap (Image 1) -->
+                <circle cx="200" cy="200" r="62" fill="#12151c" stroke="#64748b" stroke-width="4" />
+                <circle cx="200" cy="200" r="52" fill="#0b0c10" stroke="#00f0ff" stroke-width="2" />
+
+                <!-- Center 'K' Emblem (Stylized from Image 1) -->
+                <circle cx="200" cy="200" r="32" fill="#181c26" stroke="#ffffff" stroke-width="1.5" />
+                <path d="M 190 182 L 190 218 M 190 200 L 210 182 M 190 200 L 210 218" fill="none" stroke="#00f0ff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+
+                <!-- Left Wing Controls: D-Pad (Image 1) -->
+                <g transform="translate(110, 185)">
+                    <circle cx="0" cy="0" r="22" fill="#1e2430" stroke="#334155" stroke-width="1.5" />
+                    <!-- Cross -->
+                    <path d="M -12 -4 H -4 V -12 H 4 V -4 H 12 V 4 H 4 V 12 H -4 V 4 H -12 Z" fill="#00f0ff" />
+                </g>
+
+                <!-- Left Lower Curved Buttons (Image 1) -->
+                <circle cx="125" cy="225" r="7" fill="#1e2430" stroke="#00f0ff" stroke-width="1.5" />
+                <circle cx="140" cy="242" r="7" fill="#1e2430" stroke="#00f0ff" stroke-width="1.5" />
+                <circle cx="158" cy="255" r="7" fill="#1e2430" stroke="#00f0ff" stroke-width="1.5" />
+
+                <!-- Right Wing Controls: Colored Xbox Buttons (Image 1) -->
+                <!-- Y (Yellow Top) -->
+                <circle cx="290" cy="165" r="8" fill="#eab308" stroke="#ffffff" stroke-width="1" />
+                <!-- X (Blue Left) -->
+                <circle cx="272" cy="183" r="8" fill="#3b82f6" stroke="#ffffff" stroke-width="1" />
+                <!-- A (Green Bottom) -->
+                <circle cx="290" cy="201" r="8" fill="#22c55e" stroke="#ffffff" stroke-width="1" />
+                <!-- B (Red Right) -->
+                <circle cx="308" cy="183" r="8" fill="#ef4444" stroke="#ffffff" stroke-width="1" />
+
+                <!-- Right Lower Curved Buttons (Image 1) -->
+                <circle cx="275" cy="225" r="7" fill="#1e2430" stroke="#00f0ff" stroke-width="1.5" />
+                <circle cx="260" cy="242" r="7" fill="#1e2430" stroke="#00f0ff" stroke-width="1.5" />
+                <circle cx="242" cy="255" r="7" fill="#1e2430" stroke="#00f0ff" stroke-width="1.5" />
+
+                <!-- Bottom Hub Function Buttons (Image 1 Arc) -->
+                <circle cx="175" cy="275" r="6" fill="#00f0ff" />
+                <circle cx="191" cy="279" r="6" fill="#00f0ff" />
+                <circle cx="209" cy="279" r="6" fill="#00f0ff" />
+                <circle cx="225" cy="275" r="6" fill="#00f0ff" />
+
+                <!-- Paddle Shifters Behind -->
+                <path d="M 40 120 L 60 110 L 55 180 L 35 170 Z" fill="#334155" stroke="#00f0ff" stroke-width="1" />
+                <path d="M 360 120 L 340 110 L 345 180 L 365 170 Z" fill="#334155" stroke="#00f0ff" stroke-width="1" />
+            `;
+        }
+
+        // Image 2: PCyes W270 Vector
+        function generatePcyesSvg() {
+            return `
+                <!-- Outer Leather Rim -->
+                <circle cx="200" cy="200" r="175" fill="none" stroke="#12151c" stroke-width="32" />
+                <circle cx="200" cy="200" r="175" fill="none" stroke="#252c3d" stroke-width="26" stroke-dasharray="12 4" />
+                
+                <!-- Red Top Center Stripe (Image 2) -->
+                <path d="M 191 26 A 175 175 0 0 1 209 26" fill="none" stroke="#ff2a4b" stroke-width="28" />
+
+                <!-- Angular Silver 3-Spoke Y-Frame (Image 2) -->
+                <path d="M 65 170 L 150 185 L 145 220 L 175 240 L 175 325 L 225 325 L 225 240 L 255 220 L 250 185 L 335 170 L 325 210 L 240 240 L 215 335 L 185 335 L 160 240 L 75 210 Z" fill="#cbd5e1" stroke="#ffffff" stroke-width="1.5" />
+
+                <!-- Dark Center Hub Trapezoid Block (Image 2) -->
+                <path d="M 140 150 L 260 150 L 245 240 L 155 240 Z" fill="#181c26" stroke="#ff2a4b" stroke-width="2" />
+                <path d="M 150 160 L 250 160 L 238 230 L 162 230 Z" fill="#0b0c10" />
+
+                <!-- Red PCyes Logo Badge (Image 2 Center Cap) -->
+                <rect x="165" y="180" width="70" height="28" rx="6" fill="#ff2a4b" stroke="#ffffff" stroke-width="1" />
+                <text x="200" y="199" text-anchor="middle" fill="#ffffff" font-family="Rajdhani" font-size="14" font-weight="800" letter-spacing="1">PCyes</text>
+
+                <!-- Left Control Inset (Image 2) -->
+                <g transform="translate(110, 185)">
+                    <rect x="-18" y="-18" width="36" height="36" rx="8" fill="#1e2430" stroke="#ff2a4b" stroke-width="1" />
+                    <!-- D-Pad -->
+                    <path d="M -10 -3 H -3 V -10 H 3 V -3 H 10 V 3 H 3 V 10 H -3 V 3 H -10 Z" fill="#ffffff" />
+                </g>
+
+                <!-- Left Horizontal Row of Control Buttons (Image 2) -->
+                <rect x="135" y="215" width="12" height="7" rx="2" fill="#ff2a4b" />
+                <rect x="150" y="215" width="12" height="7" rx="2" fill="#ff2a4b" />
+                <rect x="165" y="215" width="12" height="7" rx="2" fill="#ff2a4b" />
+
+                <!-- Right Control Buttons (Image 2) -->
+                <g transform="translate(290, 185)">
+                    <circle cx="-10" cy="-10" r="7" fill="#252c3d" stroke="#ff2a4b" stroke-width="1.5" />
+                    <circle cx="10" cy="-10" r="7" fill="#252c3d" stroke="#ff2a4b" stroke-width="1.5" />
+                    <circle cx="-10" cy="10" r="7" fill="#252c3d" stroke="#ff2a4b" stroke-width="1.5" />
+                    <circle cx="10" cy="10" r="7" fill="#252c3d" stroke="#ff2a4b" stroke-width="1.5" />
+                </g>
+
+                <!-- Right Horizontal Row of Control Buttons (Image 2) -->
+                <rect x="223" y="215" width="12" height="7" rx="2" fill="#ff2a4b" />
+                <rect x="238" y="215" width="12" height="7" rx="2" fill="#ff2a4b" />
+                <rect x="253" y="215" width="12" height="7" rx="2" fill="#ff2a4b" />
+
+                <!-- Lower Center Hub Buttons (Image 2) -->
+                <circle cx="170" cy="250" r="5" fill="#ffffff" />
+                <circle cx="190" cy="250" r="5" fill="#ffffff" />
+                <circle cx="210" cy="250" r="5" fill="#ffffff" />
+                <circle cx="230" cy="250" r="5" fill="#ffffff" />
+
+                <!-- Paddle Shifters -->
+                <path d="M 45 130 L 65 120 L 60 190 L 40 180 Z" fill="#334155" stroke="#ff2a4b" stroke-width="1" />
+                <path d="M 355 130 L 335 120 L 340 190 L 360 180 Z" fill="#334155" stroke="#ff2a4b" stroke-width="1" />
+            `;
+        }
+
+        // --- DEVICE SWITCHING CORE LOGIC ---
+        function switchDevice(devKey) {
+            if (!deviceConfigs[devKey]) return;
+            currentDevice = devKey;
+
+            const config = deviceConfigs[devKey];
+
+            // Toggle body theme
+            if (config.themeClass) {
+                document.body.className = config.themeClass + ' bg-hub-bg text-hub-text font-sans min-h-screen flex flex-col antialiased';
+            } else {
+                document.body.className = 'bg-hub-bg text-hub-text font-sans min-h-screen flex flex-col antialiased';
+            }
+
+            // Update Header & Badge
+            document.getElementById('device-model-badge').textContent = config.badge;
+            document.getElementById('device-conn-info').textContent = config.conn;
+            document.getElementById('firmware-tag').textContent = config.firmware;
+
+            // Toggle device tabs style
+            const btnKalkam = document.getElementById('btn-device-kalkam');
+            const btnPcyes = document.getElementById('btn-device-pcyes');
+
+            if (devKey === 'kalkam') {
+                btnKalkam.className = 'flex items-center gap-2.5 px-4 py-2 rounded-lg text-xs font-bold transition-all duration-300 bg-hub-card text-hub-kalkam border border-hub-kalkam/40 shadow-lg shadow-hub-kalkam/10';
+                btnPcyes.className = 'flex items-center gap-2.5 px-4 py-2 rounded-lg text-xs font-bold transition-all duration-300 text-gray-400 hover:text-white border border-transparent';
+            } else {
+                btnPcyes.className = 'flex items-center gap-2.5 px-4 py-2 rounded-lg text-xs font-bold transition-all duration-300 bg-hub-card text-hub-pcyes border border-hub-pcyes/40 shadow-lg shadow-hub-pcyes/10';
+                btnKalkam.className = 'flex items-center gap-2.5 px-4 py-2 rounded-lg text-xs font-bold transition-all duration-300 text-gray-400 hover:text-white border border-transparent';
+            }
+
+            // Render active SVGs
+            const wheelSvgContainer = document.getElementById('wheel-svg');
+            const mappingSvgContainer = document.getElementById('mapping-wheel-svg');
+
+            const svgContent = devKey === 'kalkam' ? generateKalkamSvg() : generatePcyesSvg();
+            wheelSvgContainer.innerHTML = svgContent;
+            mappingSvgContainer.innerHTML = svgContent;
+
+            // Render Hotspots for button mapping
+            renderHotspots();
+
+            showToast(`Dispositivo alterado para ${config.name}`);
+        }
+
+        function simulateAutoDetect() {
+            showToast('Escaneando portas USB...');
+            setTimeout(() => {
+                const nextDev = currentDevice === 'kalkam' ? 'pcyes' : 'kalkam';
+                switchDevice(nextDev);
+            }, 800);
+        }
+
+        // --- NAVIGATION TABS LOGIC ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(panel => panel.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('text-brand', 'border-brand', 'bg-brand/5', 'font-bold');
+                btn.classList.add('text-gray-400', 'border-transparent', 'font-medium');
+            });
+
+            const activePanel = document.getElementById(tabId);
+            if (activePanel) activePanel.classList.remove('hidden');
+
+            const activeBtn = document.getElementById('nav-' + tabId);
+            if (activeBtn) {
+                activeBtn.classList.add('text-brand', 'border-brand', 'bg-brand/5', 'font-bold');
+                activeBtn.classList.remove('text-gray-400', 'border-transparent', 'font-medium');
+            }
+        }
+
+        // --- STEERING ROTATION LOGIC ---
+        function onSteerSliderInput(val) {
+            const wrapper = document.getElementById('wheel-svg-wrapper');
+            const textDisplay = document.getElementById('current-angle-text');
+
+            const angle = Math.round((val / 540) * (maxAngle / 2));
+            wrapper.style.transform = `rotate(${angle}deg)`;
+            textDisplay.textContent = `${angle}°`;
+        }
+
+        function resetSteerAngle() {
+            document.getElementById('steer-input-slider').value = 0;
+            onSteerSliderInput(0);
+        }
+
+        function setAngleLock(angle) {
+            maxAngle = parseInt(angle);
+            document.getElementById('max-angle-badge').textContent = `${angle}°`;
+            document.getElementById('angle-val-display').textContent = `${angle}°`;
+            document.getElementById('angle-fine-slider').value = angle;
+
+            document.querySelectorAll('.angle-lock-btn').forEach(btn => {
+                if (btn.dataset.angle == angle) {
+                    btn.className = 'angle-lock-btn active bg-brand/20 border border-brand text-brand py-2 rounded-lg text-xs font-bold transition-all';
+                } else {
+                    btn.className = 'angle-lock-btn bg-hub-bg hover:bg-hub-hover border border-hub-border text-gray-300 py-2 rounded-lg text-xs font-bold transition-all';
+                }
+            });
+
+            resetSteerAngle();
+            showToast(`Ângulo máximo ajustado para ${angle}°`);
+        }
+
+        function onFineAngleInput(val) {
+            maxAngle = parseInt(val);
+            document.getElementById('max-angle-badge').textContent = `${val}°`;
+            document.getElementById('angle-val-display').textContent = `${val}°`;
+        }
+
+        // --- LINEARITY CANVAS GRAPH ---
+        function updateLinearityCanvas(linearityVal) {
+            const canvas = document.getElementById('linearity-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            document.getElementById('linearity-val-label').textContent = `${linearityVal} ${linearityVal == 50 ? '(Linear)' : ''}`;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Grid lines
+            ctx.strokeStyle = '#242b3b';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(w/2, 0); ctx.lineTo(w/2, h);
+            ctx.moveTo(0, h/2); ctx.lineTo(w, h/2);
+            ctx.stroke();
+
+            // Linearity Curve
+            const themeColor = deviceConfigs[currentDevice].themeColor;
+            ctx.strokeStyle = themeColor;
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+
+            const exponent = (100 - linearityVal) / 50;
+
+            for (let x = 0; x <= w; x++) {
+                let normX = (x / w) * 2 - 1; // -1 to 1
+                let normY = Math.sign(normX) * Math.pow(Math.abs(normX), exponent || 0.001);
+                let y = h - ((normY + 1) / 2) * h;
+
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        }
+
+        // --- PEDALS & H-SHIFTER LOGIC ---
+        function updatePedalBar(type, val) {
+            const bar = document.getElementById(`${type}-bar`);
+            const label = document.getElementById(`${type}-val`);
+            if (bar && label) {
+                bar.style.width = `${val}%`;
+                label.textContent = `${val}%`;
+            }
+        }
+
+        function setGear(gear) {
+            activeGear = gear;
+            document.getElementById('active-gear-display').textContent = `MARCHA: ${gear}`;
+
+            document.querySelectorAll('.gear-btn').forEach(btn => {
+                if (btn.dataset.gear === gear) {
+                    btn.className = 'gear-btn bg-brand/20 border border-brand font-mono font-bold text-brand p-3 rounded-xl transition-all text-sm scale-105';
+                } else if (btn.dataset.gear === 'R') {
+                    btn.className = 'gear-btn bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 font-mono font-bold text-red-400 p-3 rounded-xl transition-all text-sm';
+                } else {
+                    btn.className = 'gear-btn bg-hub-card hover:bg-hub-hover border border-hub-border font-mono font-bold text-white p-3 rounded-xl transition-all text-sm';
+                }
+            });
+        }
+
+        // --- HOTSPOTS & BUTTON MAPPING RENDER ---
+        function renderHotspots() {
+            const container = document.getElementById('hotspot-pins-container');
+            const summaryList = document.getElementById('mapping-summary-list');
+
+            const spots = deviceConfigs[currentDevice].hotspots;
+            const maps = activeMappings[currentDevice];
+
+            container.innerHTML = '';
+            summaryList.innerHTML = '';
+
+            spots.forEach((spot, index) => {
+                // Pin Element
+                const pin = document.createElement('button');
+                pin.className = `absolute w-6 h-6 rounded-full bg-brand text-black font-extrabold text-[10px] flex items-center justify-center shadow-lg transition-all hover:scale-125 border-2 border-white ${index === 0 ? 'pin-active' : ''}`;
+                pin.style.left = spot.x;
+                pin.style.top = spot.y;
+                pin.textContent = index + 1;
+                pin.onclick = () => selectHotspot(spot.id);
+
+                container.appendChild(pin);
+
+                // Summary Row
+                const row = document.createElement('div');
+                row.className = 'flex justify-between items-center bg-hub-bg p-2.5 rounded-lg border border-hub-border text-xs';
+                row.innerHTML = `
+                    <span class="font-bold text-gray-300">${spot.label}</span>
+                    <span class="text-brand font-mono font-semibold" id="map-lbl-${spot.id}">${maps[spot.id] || spot.defaultAction}</span>
+                `;
+                summaryList.appendChild(row);
+            });
+
+            if (spots.length > 0) {
+                selectHotspot(spots[0].id);
+            }
+        }
+
+        function selectHotspot(id) {
+            selectedHotspotId = id;
+            const spots = deviceConfigs[currentDevice].hotspots;
+            const found = spots.find(s => s.id === id);
+
+            if (found) {
+                document.getElementById('selected-pin-label').textContent = found.label;
+            }
+        }
+
+        function assignActionToButton(actionVal) {
+            activeMappings[currentDevice][selectedHotspotId] = actionVal;
+            const lbl = document.getElementById(`map-lbl-${selectedHotspotId}`);
+            if (lbl) lbl.textContent = actionVal;
+
+            showToast(`Botão remapeado para: ${actionVal}`);
+        }
+
+        // --- PRESETS & PROFILES ---
+        function loadProfilePreset(presetKey) {
+            const presets = {
+                ets2: { angle: 900, ffb: 70, linearity: 50 },
+                assetto: { angle: 540, ffb: 95, linearity: 50 },
+                forza: { angle: 900, ffb: 80, linearity: 45 },
+                f1: { angle: 360, ffb: 100, linearity: 60 }
+            };
+
+            const selected = presets[presetKey];
+            if (selected) {
+                setAngleLock(selected.angle);
+                document.getElementById('ffb-gain-slider').value = selected.ffb;
+                document.getElementById('ffb-val-label').textContent = `${selected.ffb}%`;
+                document.getElementById('linearity-slider').value = selected.linearity;
+                updateLinearityCanvas(selected.linearity);
+
+                showToast(`Perfil carregado com sucesso!`);
+            }
+        }
+
+        function saveProfile() {
+            showToast('Perfil salvo na memória do dispositivo!');
+        }
+
+        function resetDefaults() {
+            loadProfilePreset('ets2');
+            showToast('Configurações restauradas para o padrão de fábrica.');
+        }
+
+        // --- TOAST NOTIFICATION ---
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const toastText = document.getElementById('toast-text');
+            toastText.textContent = msg;
+
+            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+            }, 2200);
+        }
+
+        // --- INITIALIZATION ---
+        window.onload = function() {
+            switchDevice('kalkam');
+            updateLinearityCanvas(50);
+        };
+    </script>
+</body>
+</html>

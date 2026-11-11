@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480"><rect width="640" height="480" rx="28" fill="#0b0c10" /><text x="28" y="44" fill="#ffffff" font-family="Rajdhani, Inter, Arial" font-size="30" font-weight="700">PCyes W270</text>
+        <rect x="28" y="54" width="56" height="4" rx="2" fill="#ff2a4b" />
+        <g transform="translate(0 60)">
+        <ellipse cx="320" cy="400" rx="300" ry="16" fill="#000" opacity=".35" />
+        <!-- base do volante -->
+        <path d="M 110 392 L 150 300 L 330 300 L 370 392 Z" fill="#161a23" stroke="#3a4357" stroke-width="2" />
+        <rect x="196" y="262" width="88" height="48" rx="10" fill="#1d222d" stroke="#3a4357" stroke-width="2" />
+        <g transform="translate(240 170) scale(0.7916666666666666) translate(-200 -200)">
+            <circle cx="200" cy="200" r="175" fill="none" stroke="#12151c" stroke-width="32" />
+            <circle cx="200" cy="200" r="175" fill="none" stroke="#252c3d" stroke-width="26" stroke-dasharray="12 4" />
+            <path d="M 191 26 A 175 175 0 0 1 209 26" fill="none" stroke="#ff2a4b" stroke-width="28" />
+            <path d="M 65 170 L 150 185 L 145 220 L 175 240 L 175 325 L 225 325 L 225 240 L 255 220 L 250 185 L 335 170 L 325 210 L 240 240 L 215 335 L 185 335 L 160 240 L 75 210 Z" fill="#cbd5e1" stroke="#ffffff" stroke-width="1.5" />
+            <path d="M 140 150 L 260 150 L 245 240 L 155 240 Z" fill="#181c26" stroke="#ff2a4b" stroke-width="2" />
+            <path d="M 150 160 L 250 160 L 238 230 L 162 230 Z" fill="#0b0c10" />
+            <rect x="165" y="180" width="70" height="28" rx="6" fill="#ff2a4b" stroke="#ffffff" stroke-width="1" />
+            <text x="200" y="199" text-anchor="middle" fill="#ffffff" font-family="Rajdhani" font-size="14" font-weight="700" letter-spacing="1">PCyes</text>
+            <g transform="translate(110, 185)">
+                <rect x="-18" y="-18" width="36" height="36" rx="8" fill="#1e2430" stroke="#ff2a4b" stroke-width="1" />
+                <path d="M -10 -3 H -3 V -10 H 3 V -3 H 10 V 3 H 3 V 10 H -3 V 3 H -10 Z" fill="#ffffff" />
+            </g>
+            <rect x="135" y="215" width="12" height="7" rx="2" fill="#ff2a4b" />
+            <rect x="150" y="215" width="12" height="7" rx="2" fill="#ff2a4b" />
+            <rect x="165" y="215" width="12" height="7" rx="2" fill="#ff2a4b" />
+            <g transform="translate(290, 185)">
+                <circle cx="-10" cy="-10" r="7" fill="#252c3d" stroke="#ff2a4b" stroke-width="1.5" />
+                <circle cx="10" cy="-10" r="7" fill="#252c3d" stroke="#ff2a4b" stroke-width="1.5" />
+                <circle cx="-10" cy="10" r="7" fill="#252c3d" stroke="#ff2a4b" stroke-width="1.5" />
+                <circle cx="10" cy="10" r="7" fill="#252c3d" stroke="#ff2a4b" stroke-width="1.5" />
+            </g>
+            <rect x="223" y="215" width="12" height="7" rx="2" fill="#ff2a4b" />
+            <rect x="238" y="215" width="12" height="7" rx="2" fill="#ff2a4b" />
+            <rect x="253" y="215" width="12" height="7" rx="2" fill="#ff2a4b" />
+            <circle cx="170" cy="250" r="5" fill="#ffffff" />
+            <circle cx="190" cy="250" r="5" fill="#ffffff" />
+            <circle cx="210" cy="250" r="5" fill="#ffffff" />
+            <circle cx="230" cy="250" r="5" fill="#ffffff" />
+            <path d="M 45 130 L 65 120 L 60 190 L 40 180 Z" fill="#334155" stroke="#ff2a4b" stroke-width="1" />
+            <path d="M 355 130 L 335 120 L 340 190 L 360 180 Z" fill="#334155" stroke="#ff2a4b" stroke-width="1" /></g>
+        <g transform="translate(386 186) scale(0.92)">
+        <path d="M 8 70 L 22 46 L 238 46 L 252 70 L 252 168 L 8 168 Z" fill="#1d222d" stroke="#3a4357" stroke-width="2" />
+        <rect x="16" y="56" width="228" height="10" rx="3" fill="#2a3245" />
+        
+        <rect x="30" y="74" width="52" height="86" rx="7" fill="#c7cfda" stroke="#e5e9f0" stroke-width="2" />
+        <circle cx="44.56" cy="92.92" r="4.5" fill="#1e2430" /><circle cx="44.56" cy="141.07999999999998" r="4.5" fill="#1e2430" /><circle cx="67.44" cy="92.92" r="4.5" fill="#1e2430" /><circle cx="67.44" cy="141.07999999999998" r="4.5" fill="#1e2430" />
+        <rect x="104" y="74" width="52" height="86" rx="7" fill="#c7cfda" stroke="#e5e9f0" stroke-width="2" />
+        <circle cx="118.56" cy="92.92" r="4.5" fill="#1e2430" /><circle cx="118.56" cy="141.07999999999998" r="4.5" fill="#1e2430" /><circle cx="141.44" cy="92.92" r="4.5" fill="#1e2430" /><circle cx="141.44" cy="141.07999999999998" r="4.5" fill="#1e2430" />
+        <rect x="186" y="60" width="40" height="100" rx="7" fill="#c7cfda" stroke="#e5e9f0" stroke-width="2" />
+        <circle cx="197.2" cy="82" r="4.5" fill="#1e2430" /><circle cx="197.2" cy="138" r="4.5" fill="#1e2430" /><circle cx="214.8" cy="82" r="4.5" fill="#1e2430" /><circle cx="214.8" cy="138" r="4.5" fill="#1e2430" />
+        <path d="M 0 168 L 260 168 L 248 226 L 12 226 Z" fill="#151922" stroke="#3a4357" stroke-width="2" />
+        <rect x="24" y="180" width="16" height="36" rx="3" fill="#0d1016" /><rect x="48" y="180" width="16" height="36" rx="3" fill="#0d1016" /><rect x="72" y="180" width="16" height="36" rx="3" fill="#0d1016" /><rect x="96" y="180" width="16" height="36" rx="3" fill="#0d1016" /><rect x="120" y="180" width="16" height="36" rx="3" fill="#0d1016" /><rect x="144" y="180" width="16" height="36" rx="3" fill="#0d1016" /><rect x="168" y="180" width="16" height="36" rx="3" fill="#0d1016" /><rect x="192" y="180" width="16" height="36" rx="3" fill="#0d1016" /><rect x="216" y="180" width="16" height="36" rx="3" fill="#0d1016" />
+        <rect x="104" y="174" width="52" height="12" rx="3" fill="#ff2a4b" opacity=".85" /></g>
+        <g transform="translate(432 0) scale(0.86)">
+        <path d="M 10 150 C 10 90 40 70 96 70 L 150 70 C 182 70 196 96 196 130 L 196 168 C 196 182 186 190 172 190 L 28 190 C 16 190 10 180 10 166 Z"
+              fill="#1d222d" stroke="#3a4357" stroke-width="2" />
+        <ellipse cx="96" cy="112" rx="58" ry="30" fill="#12151c" stroke="#475569" stroke-width="2" />
+        <path d="M 62 102 H 130 M 62 122 H 130 M 70 98 V 126 M 96 98 V 126 M 122 98 V 126" stroke="#3a4357" stroke-width="5" stroke-linecap="round" />
+        <rect x="91" y="40" width="10" height="72" rx="4" fill="#9aa4b5" />
+        <circle cx="96" cy="34" r="27" fill="#2a3245" stroke="#cbd5e1" stroke-width="2.5" />
+        <circle cx="88" cy="26" r="8" fill="#ffffff" opacity=".18" />
+        <rect x="150" y="102" width="30" height="20" rx="5" fill="#12151c" stroke="#ff2a4b" stroke-width="2" />
+        <text x="165" y="117" text-anchor="middle" fill="#ff2a4b" font-family="Inter, Arial" font-size="12" font-weight="800">P</text>
+        <rect x="150" y="132" width="30" height="20" rx="5" fill="#12151c" stroke="#64748b" stroke-width="2" />
+        <text x="165" y="146" text-anchor="middle" fill="#cbd5e1" font-family="Inter, Arial" font-size="8.5" font-weight="800">LO/HI</text></g>
+        </g>
+    </svg>

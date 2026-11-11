@@ -1,0 +1,21 @@
+# ambiente Python e caches
+.venv/
+__pycache__/
+*.pyc
+
+# saídas do PyInstaller (o .exe vai na aba Releases do GitHub)
+build/
+dist/
+*.exe
+
+# app oficial de terceiros e código decompilado dele (direitos da LITE STAR)
+*.apk
+*.apks
+*.xapk
+ferramentas/referencia_app/
+
+# arquivos de teste e do sistema
+autoteste*.json
+resultado.json
+Thumbs.db
+desktop.ini
