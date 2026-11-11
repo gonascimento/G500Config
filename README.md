@@ -2,6 +2,9 @@
 
 Programa para configurar os volantes **Kalkam G500** e **PCyes W270** no Windows (os dois usam o mesmo protocolo da LITE STAR). A interface segue o layout `kalkam_g500_pcyes_w270_configurator.html`, e roda numa janela do Windows (WebView2, já incluso no Windows 10/11).
 
+Quer contribuir com meu trabalho? Segue minha chave pix. Desde já obrigado a todos por ajudar meu trampo!
+e6a1b0a1-a143-462c-aea7-b0351aa00092
+
 <p align="center">
   <img src="docs/kalkam_g500.svg" width="45%" alt="Desenho do Kalkam G500 com pedais e câmbio">
   <img src="docs/pcyes_w270.svg" width="45%" alt="Desenho do PCyes W270 com pedais e câmbio">
