@@ -1,6 +1,6 @@
 # G500 Config
 
-Programa para configurar os volantes **Kalkam G500** e **PCyes W270** no Windows (os dois usam o mesmo protocolo da LITE STAR). A interface segue o layout `kalkam_g500_pcyes_w270_configurator.html`, no estilo do Logitech G HUB, e roda numa janela do Windows (WebView2, já incluso no Windows 10/11).
+Programa para configurar os volantes **Kalkam G500** e **PCyes W270** no Windows (os dois usam o mesmo protocolo da LITE STAR). A interface segue o layout `kalkam_g500_pcyes_w270_configurator.html`, e roda numa janela do Windows (WebView2, já incluso no Windows 10/11).
 
 <p align="center">
   <img src="docs/kalkam_g500.svg" width="45%" alt="Desenho do Kalkam G500 com pedais e câmbio">
